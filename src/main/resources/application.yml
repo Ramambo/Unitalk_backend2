@@ -1,40 +1,43 @@
 server:
-  port: 3791
+  port: 3791 # 실행될 포트 설정
 
 spring:
   application:
     name: unitalk
 
+ # 데이터베이스 설정
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/unitalk?serverTimezone=Asia/Seoul
-    username: jt001
-    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver # 데이터베이스 드라이버 클래스 이름 설정
+    url: jdbc:mysql://localhost:3306/unitalk?serverTimezone=Asia/Seoul # 데이터베이스 연결 URL 설정
+    username: jt001 # 데이터베이스 사용자 이름 설정
+    password: 1234 # 데이터베이스 비밀번호 설정
 
+  # jpa 설정
   jpa:
-    database: mysql
-    #database-platform: org.hibernate.dialect.MySQL8Dialect 버전이 높아지며 명시할 필요 사라짐
-    generate-ddl: true
-    show-sql: true
-    open-in-view: false
+    database: mysql # MySQL로 설정
+    #database-platform: org.hibernate.dialect.MySQL8Dialect 버전이 높아지며 명시할 필요 없음
+    generate-ddl: true # DDL 자동 생성
+    show-sql: true # SQL 쿼리를 출력
+    open-in-view: false # 비활성화하여 성능 최적화
     hibernate:
-      ddl-auto: create
+      ddl-auto: create # 애플리케이션 시작 시 데이터베이스 스키마 설정
       naming:
-        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        # 아래 두 설정을 통해 camel case가 snake case로 변환되어 저장되는 것을 방지
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl # 기본 네이밍 전략 설정
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl # 물리적 네이밍 전략 설정
     properties:
       hibernate:
-        format_sql: true
-        use_sql_comments: true
-        default_batch_fetch_size: 100
+        format_sql: true # SQL 쿼리 포맷팅
+        use_sql_comments: true # SQL 쿼리 주석 추가
+        default_batch_fetch_size: 100 # 기본 배치 가져오기 크기를 100으로 설정
 
   # 파일 설정(파일크기)
   servlet:
     multipart:
-      max-file-size: 200MB
-      max-request-size: 200MB
+      max-file-size: 100MB # 업로드 가능한 파일의 최대 크기 설정
+      max-request-size: 100MB # 업로드 요청의 최대 크기 설정
 
-  # devtools 설정 (파일크기)
+  # devtools 설정
   devtools:
     livereload:
       enabled: true # 브라우저 자동 새로고침 활성화
