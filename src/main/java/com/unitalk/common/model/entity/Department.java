@@ -22,8 +22,8 @@ public class Department {
     @Column(name = "dept_name", nullable = false)
     private String deptName; //부서명
 
-    @Column(name = "dept_div", nullable = false)
-    private String deptDiv;
+    @Column(name = "dept_division", nullable = false)
+    private String deptDivision; //코드분류
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "up_dept_id", nullable = false)
@@ -33,10 +33,10 @@ public class Department {
     private Set<Department> subDepts;
 
     @Builder
-    public Department(String deptId, String deptName, String deptDiv, Department upDeptId, Set<Department> subDepts) {
+    public Department(String deptId, String deptName, String deptDivision, Department upDeptId, Set<Department> subDepts) {
         this.deptId = deptId;
         this.deptName = deptName;
-        this.deptDiv = deptDiv;
+        this.deptDivision = deptDivision;
         this.upDeptId = upDeptId;
         this.subDepts = subDepts;
     }
