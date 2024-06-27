@@ -18,17 +18,19 @@ public class ProfessorAssignment {
     @Column(name = "assignment_id", unique = true, nullable = false)
     private Integer assignmentId; //지도교수 배정 이력 일련번호, PK
 
-    @Column(name = "student_id", nullable = false)
-    private Integer studentId; //학생 ID, FK
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", nullable = false)
+    private User studentId; //학생 ID, FK
 
-    @Column(name = "professor_id", nullable = false)
-    private Integer professorId; //교수 ID, FK
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "professor_id", nullable = false)
+    private User professorId; //교수 ID, FK
 
     @Column(name = "assignment_date", nullable = false)
     private LocalDateTime assignmentDate; //지도교수 배정 일시
 
     @Builder
-    public ProfessorAssignment(Integer studentId, Integer professorId) {
+    public ProfessorAssignment(User studentId, User professorId) {
         this.studentId = studentId;
         this.professorId = professorId;
     }
@@ -38,4 +40,5 @@ public class ProfessorAssignment {
     protected void onCreate() {
         this.assignmentDate = LocalDateTime.now();
     }
+
 }
