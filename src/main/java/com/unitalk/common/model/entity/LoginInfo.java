@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Builder
-@Table(name = "Login_info")
+@Table(name = "Login_Info")
 public class LoginInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userNo; //사용자 일련번호(PK)
+    private Integer userNo; //로그인 번호(PK)
 
-    @Column(nullable = false)
-    private Integer userId; //사용자 ID
+    @Column(unique = true, nullable = false)
+    private Integer userId; //사용자 ID, 학번 및 교번
 
     @Column(nullable = false)
     private String password; //사용자 암호

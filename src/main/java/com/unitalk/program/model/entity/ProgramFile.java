@@ -11,19 +11,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Builder
-@Table(name = "Program_Img")
-public class ProgramImg {
+@Table(name = "Program_File")
+public class ProgramFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer imgId; // 집단상담 이미지 ID(PK)
+    private Integer fileId; // 집단상담 파일 ID(PK)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "programId", nullable = false)
     private Program programId; // 집단상담 ID(FK)
 
     @Column(nullable = false)
-    private String imgName; // 집단상담 이미지명
+    private String fileName; // 집단상담 파일명
 
     @Column(nullable = false)
-    private String imgPath; // 집단상담 이미지 경로
+    private String filePath; // 집단상담 파일 경로
 }

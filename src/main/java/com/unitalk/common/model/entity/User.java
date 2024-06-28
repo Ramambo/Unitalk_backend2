@@ -17,15 +17,15 @@ import java.time.LocalDateTime;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userId; //사용자 ID(PK)
+    private Integer userNo; //사용자 번호(PK)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deptId", nullable = false)
     private Department deptId; //부서 ID(FK)
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userNo", nullable = false)
-    private LoginInfo userNo; //사용자 일련번호(FK)
+    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
+    private LoginInfo userId; //사용자 ID(FK), 학번 및 교번
 
     @Column(nullable = false)
     private String userame; //시용자 이름

@@ -14,7 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Builder
-@Table(name = "CommonCode")
+@Table(name = "Common_Code")
 public class CommonCode {
     @Id
     @Column(nullable = false)
