@@ -16,12 +16,9 @@ import java.time.LocalDateTime;
 @Table(name = "Students")
 public class Student {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer studentId; // 학생 ID(PK)
-
-    @OneToOne (fetch = FetchType.LAZY)
-    @JoinColumn(name = "studentCode", referencedColumnName = "userCode", nullable = false)
-    private User studentCode; // 학생 코드(학번)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "studentCode", unique = true, referencedColumnName = "userCode")
+    private User studentCode; // 사용자 엔티티와 매핑
 
     @Column(nullable = false)
     private String name; // 이름
@@ -30,16 +27,7 @@ public class Student {
     private Integer grade; // 학년
 
     @Column(nullable = false)
-    private String degreeCourse; // 학위 과정: 학사, 석사, 박사, 석박사 통합
-
-    @Column(nullable = false)
     private LocalDateTime admissionDate; // 입학일
-
-    @Column(nullable = false)
-    private String academicStatus; // 학적: 재학, 휴학, 제적, 졸업, 수료
-
-    @Column(nullable = false)
-    private LocalDateTime birthday; // 생년월일
 
     @Column(nullable = false)
     private String email; // 이메일
@@ -48,8 +36,8 @@ public class Student {
     private String phone; // 전화번호
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "advisor", referencedColumnName = "empCode", nullable = false)
-    private Employee advisor; // 지도교수
+    @JoinColumn(name = "empCode", referencedColumnName = "empCode", nullable = false)
+    private Employee empCode; // 지도교수
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "deptCode", referencedColumnName = "deptCode", nullable = false)

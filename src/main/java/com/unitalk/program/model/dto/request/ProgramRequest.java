@@ -30,7 +30,6 @@ public class ProgramRequest {
     // DTO 객체를 엔티티로 변환
     public Program toEntity() {
         return Program.builder()
-                .counselorCode(counselorCode)
                 .programName(programName)
                 .programContent(programContent)
                 .recruitStart(recruitStart)
@@ -39,10 +38,6 @@ public class ProgramRequest {
                 .operationEnd(operationEnd)
                 .programSession(programSession)
                 .recruitNum(recruitNum)
-                .deptCode(deptCode)
-                .recruitGrade(recruitGrade)
-                .participantNum(participantNum)
-                .status(status)
                 .build();
     }
 }

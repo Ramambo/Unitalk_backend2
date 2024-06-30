@@ -18,8 +18,6 @@ public class ProgramService {
         Program saveProgram = programRepository.save(programRequest.toEntity());
 
         return ProgramResponse.builder()
-                .programId(saveProgram.getProgramId())
-                .counselorCode(saveProgram.getCounselorCode())
                 .programName(saveProgram.getProgramName())
                 .programContent(saveProgram.getProgramContent())
                 .recruitStart(saveProgram.getRecruitStart())
@@ -28,9 +26,6 @@ public class ProgramService {
                 .operationEnd(saveProgram.getOperationEnd())
                 .programSession(saveProgram.getProgramSession())
                 .recruitNum(saveProgram.getRecruitNum())
-                .deptCode(saveProgram.getDeptCode())
-                .recruitGrade(saveProgram.getRecruitGrade())
-                .participantNum(saveProgram.getParticipantNum())
                 .status(saveProgram.getStatus())
                 .viewCnt(saveProgram.getViewCnt())
                 .build();

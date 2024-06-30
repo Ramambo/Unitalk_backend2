@@ -22,6 +22,10 @@ public class ProgramReview {
     @JoinColumn(name = "programId", referencedColumnName = "programId", nullable = false)
     private ProgramApplicant programId; // 집단상담 신청 번호(FK)
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "studentCode", referencedColumnName = "studentCode", nullable = false)
+    private ProgramApplicant studentCode; // 집단상담 신청 학번(FK)
+
     @Column(nullable = false)
     private BigDecimal rating; // 별점
 

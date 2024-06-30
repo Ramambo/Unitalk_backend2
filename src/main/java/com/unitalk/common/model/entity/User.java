@@ -16,9 +16,6 @@ import java.time.LocalDateTime;
 @Table(name = "Users")
 public class User{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer loginNo; //로그인 번호(PK)
-
     @Column(unique = true, nullable = false)
     private String userCode; //사용자 코드, 학번 및 교번
 
@@ -30,5 +27,4 @@ public class User{
 
     @Column(nullable = false)
     private Integer userType; //사용자 구분
-
 }

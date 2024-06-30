@@ -1,6 +1,5 @@
 package com.unitalk.program.model.entity;
 
-import com.unitalk.common.model.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +24,9 @@ public class ProgramResult {
     @JoinColumn(name = "programId", nullable = false)
     private Program programId; // 집단상담 번호(FK)
 
-    @Transient
-    private Employee counselor; // 상담사 코드(FK)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "counselorCode", referencedColumnName = "counselorCode", nullable = false)
+    private Program counselorCode; // 상담사 코드(FK)
 
     @Column(nullable = false)
     private String resultContent; // 집단상담 결과 내용

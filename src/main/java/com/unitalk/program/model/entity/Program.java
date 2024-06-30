@@ -1,6 +1,5 @@
 package com.unitalk.program.model.entity;
 
-import com.unitalk.common.model.entity.Department;
 import com.unitalk.common.model.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -44,14 +43,6 @@ public class Program {
     private Integer programSession; // 회차
 
     private Integer recruitNum; // 모집인원
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deptCode", referencedColumnName = "deptCode", nullable = false)
-    private Department deptCode; // 모집학과 코드(FK)
-
-    private Integer recruitGrade; // 모집학년
-
-    private Integer participantNum; // 참여인원
 
     @Column(nullable = false)
     private Character status; // 상태
