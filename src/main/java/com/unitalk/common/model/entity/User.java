@@ -14,26 +14,21 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @Table(name = "Users")
-public class User {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userNo; //사용자 번호(PK)
+    private Integer loginNo; //로그인 번호(PK)
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deptId", nullable = false)
-    private Department deptId; //부서 ID(FK)
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = false)
-    private LoginInfo userId; //사용자 ID(FK), 학번 및 교번
+    @Column(unique = true, nullable = false)
+    private String userCode; //사용자 코드, 학번 및 교번
 
     @Column(nullable = false)
-    private String userame; //시용자 이름
-
-    private String email; // 사용자 이메일
-
-    private String phoneNumber; // 사용자 전화번호
+    private String password; //사용자 암호
 
     @Column(nullable = false)
-    private LocalDateTime registrationYear; // 입사(학)년도
+    private LocalDateTime createDate; // 생성일
+
+    @Column(nullable = false)
+    private Integer userType; //사용자 구분
+
 }

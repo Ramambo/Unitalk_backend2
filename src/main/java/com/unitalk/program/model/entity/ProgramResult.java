@@ -1,6 +1,6 @@
 package com.unitalk.program.model.entity;
 
-import com.unitalk.common.model.entity.User;
+import com.unitalk.common.model.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,15 +19,14 @@ import java.time.LocalDateTime;
 public class ProgramResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer resultId; // 집단상담 결과 ID(PK)
+    private Integer resultId; // 집단상담 결과 번호(PK)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "programId", nullable = false)
-    private Program programId; // 집단상담 ID(FK)
+    private Program programId; // 집단상담 번호(FK)
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "counselorId", referencedColumnName = "userId", nullable = false)
-    private User counselorId; // 상담사 ID(FK)
+    @Transient
+    private Employee counselor; // 상담사 코드(FK)
 
     @Column(nullable = false)
     private String resultContent; // 집단상담 결과 내용
@@ -39,8 +38,11 @@ public class ProgramResult {
     @Column(nullable = false)
     private Integer participantNum;  // 집단상담 참여인원
 
+    @Column(nullable = false)
     private Integer programSession;  // 집단상담 회차
 
     @Column(nullable = false)
     private LocalDateTime operationDate;  // 집단상담 운영일
+
 }
+

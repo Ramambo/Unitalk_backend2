@@ -14,16 +14,16 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @Table(name = "Departments")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "deptId")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "deptCode")
 public class Department {
     @Id
     @Column(nullable = false)
-    private String deptId; // 부서 ID(PK)
+    private String deptCode; // 부서 코드(PK)
 
     @Column(nullable = false)
     private String deptName; // 부서명
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "upDeptId")
-    private Department upDeptId; // 상위 부서코드(FK)
+    @JoinColumn(name = "upDeptCode", referencedColumnName = "deptCode")
+    private Department upDeptCode; // 상위 부서코드(FK)
 }

@@ -19,8 +19,8 @@ public class ProgramReview {
     private Integer reviewId; // 집단상담 후기 ID(PK)
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "programId", nullable = false)
-    private Program programId; // 집단상담 ID(FK)
+    @JoinColumn(name = "programId", referencedColumnName = "programId", nullable = false)
+    private ProgramApplicant programId; // 집단상담 신청 번호(FK)
 
     @Column(nullable = false)
     private BigDecimal rating; // 별점

@@ -1,6 +1,6 @@
 package com.unitalk.program.model.entity;
 
-import com.unitalk.common.model.entity.User;
+import com.unitalk.common.model.entity.Student;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,20 +19,20 @@ import java.time.LocalDateTime;
 public class ProgramApplicant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer applicantId; // 집단상담 신청 ID(PK)
+    private Integer applicantId; // 집단상담 신청 번호(PK)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "programId", nullable = false)
-    private Program programId; // 집단상담 ID(FK)
+    private Program programId; // 집단상담 번호(FK)
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "studentId", referencedColumnName = "userId", nullable = false)
-    private User studentId; // 학생 ID(FK)
+    @JoinColumn(name = "studentCode", referencedColumnName = "studentCode", nullable = false)
+    private Student studentCode; // 학생 코드(FK)
 
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime applicantDate; // 신청일
 
     @Column(nullable = false)
-    private Character participationStatus; // 참여 여부
+    private Character status; // 신청상태
 }

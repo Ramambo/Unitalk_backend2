@@ -1,6 +1,6 @@
 package com.unitalk.program.model.dto.request;
 
-import com.unitalk.program.model.entity.Program;
+import com.unitalk.program.model.entity.ProgramApplicant;
 import com.unitalk.program.model.entity.ProgramReview;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProgramReviewRequest {
-    private Program programId; // 집단상담 ID(FK)
+    private ProgramApplicant programId; // 집단상담 신청 번호(FK)
     private BigDecimal rating; // 별점
     private String reviewContent; // 집단상담후기 내용
 

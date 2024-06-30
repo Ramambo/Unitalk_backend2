@@ -1,32 +1,32 @@
 package com.unitalk.program.model.dto.response;
 
-import com.unitalk.common.model.entity.User;
-import com.unitalk.program.model.entity.ProgramFile;
+import com.unitalk.common.model.entity.Department;
+import com.unitalk.common.model.entity.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ProgramResponse {
-    private Integer programId; // 집단상담 ID(PK)
-    private User counselorId; // 상담사 ID(FK)
+    private Integer programId; // 집단상담 번호(PK)
+    private Employee counselorCode; // 상담사 코드(FK)
     private String programName; // 집단상담명
     private String programContent; // 집단상담 내용
     private LocalDateTime recruitStart; // 모집시작일
-    private LocalDateTime recruitEnd; // 모집종료
+    private LocalDateTime recruitEnd; // 모집종료일
     private LocalDateTime operationStart; // 운영시작일
     private LocalDateTime operationEnd; // 운영종료일
     private Integer programSession; // 회차
     private Integer recruitNum; // 모집인원
+    private Department deptCode; // 모집학과 코드(FK)
+    private Integer recruitGrade; // 모집학년
     private Integer participantNum; // 참여인원
     private Character status; // 상태
     private Integer viewCnt; // 조회수
-    private List<ProgramFile> programFiles; // 집단상담 파일 리스트
 }
