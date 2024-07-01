@@ -41,7 +41,7 @@ public class Student {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    private Employee employeeId; //교직원 ID(지도교수)
+    private Employee employee; //교직원 ID(지도교수)
 
     @Builder
     public Student(Integer studentId, String deptId, Integer loginNo, String studentName, String studentEmail, String studentPhoneNumber, LocalDate studentRegistrationYear, Integer grade) {
@@ -53,6 +53,11 @@ public class Student {
         this.studentPhoneNumber = studentPhoneNumber;
         this.studentRegistrationYear = studentRegistrationYear;
         this.grade = grade;
+    }
+
+    //Setter for 지도교수 배정
+    public void setEmployeeId(Employee employee) {
+        this.employee = employee;
     }
 
 }
