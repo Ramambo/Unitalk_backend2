@@ -10,7 +10,6 @@ import java.util.Set;
 @Entity
 @Table(name = "Departments")
 @Getter
-@Builder
 @NoArgsConstructor
 //부서정보 Entity
 public class Department {
@@ -26,7 +25,7 @@ public class Department {
     @JoinColumn(name = "up_dept_id", nullable = false)
     private Department upDeptId; //상위부서코드, FK (재귀)
 
-    @OneToMany(mappedBy = "upDept")
+    @OneToMany(mappedBy = "upDeptId")
     private Set<Department> subDepts;
 
     @Builder

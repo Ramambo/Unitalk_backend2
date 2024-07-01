@@ -1,7 +1,6 @@
 package com.unitalk.emp.model.dto;
 
 import com.unitalk.common.model.entity.ProfessorAssignment;
-import com.unitalk.common.model.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,13 +8,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProfessorAssignmentRequest {
 
-    private User studentId;
-    private User professorId;
+    private Integer professorId;
+    private Integer studentId;
 
     public ProfessorAssignment toEntity() {
         return ProfessorAssignment.builder()
-                .studentId(studentId)
                 .professorId(professorId)
+                .studentId(studentId)
                 .build();
     }
 

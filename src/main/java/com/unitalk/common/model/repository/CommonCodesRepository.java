@@ -1,4 +1,4 @@
-package com.unitalk.common.model;
+package com.unitalk.common.model.repository;
 
 import com.unitalk.common.model.entity.CommonCode;
 import org.springframework.data.jpa.repository.JpaRepository;

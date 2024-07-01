@@ -1,17 +1,16 @@
 package com.unitalk.common.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.unitalk.common.util.CommonCodeId;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "CommonCode")
+@Table(name = "Common_Codes")
 @Getter
 @NoArgsConstructor
+@IdClass(CommonCodeId.class)
 public class CommonCode {
 
     @Id
