@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 public class ProgramReviewResponse {
     private Integer reviewId; // 집단상담 후기 ID(PK)
     private ProgramApplicant programId; // 집단상담 신청 번호(FK)
+    private ProgramApplicant studentCode; // 집단상담 신청 학번(FK)
     private BigDecimal rating; // 별점
     private String reviewContent; // 집단상담후기 내용
 }

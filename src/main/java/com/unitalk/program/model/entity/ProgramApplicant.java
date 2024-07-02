@@ -21,11 +21,11 @@ public class ProgramApplicant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer applicantId; // 집단상담 신청 번호(PK)
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "programId", nullable = false)
     private Program programId; // 집단상담 번호(FK)
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "studentCode", referencedColumnName = "studentCode", nullable = false)
     private Student studentCode; // 학생 코드(FK)
 

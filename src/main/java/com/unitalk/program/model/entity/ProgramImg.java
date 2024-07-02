@@ -17,7 +17,7 @@ public class ProgramImg {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer imgId; // 집단상담 파일 번호(PK)
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "programId", nullable = false)
     private Program programId; // 집단상담 번호(FK)
 

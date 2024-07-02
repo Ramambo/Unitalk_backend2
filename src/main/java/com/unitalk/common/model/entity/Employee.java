@@ -6,9 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Entity
 @AllArgsConstructor
@@ -18,8 +16,8 @@ import java.util.Objects;
 @Table(name = "Employees")
 public class Employee {
     @Id
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "empCode", unique = true, referencedColumnName = "userCode")
+    @OneToOne//(fetch = FetchType.LAZY) // 1:1 관계의 경우 PK 또는 복합키가 해당 컬럼이어야 한다.
+    @JoinColumn(name = "empCode", referencedColumnName = "userCode")
     private User empCode;
 
     @Column(nullable = false)
@@ -34,34 +32,10 @@ public class Employee {
     @Column(nullable = false)
     private String phone; // 전화번호
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "deptCode", referencedColumnName = "deptCode", nullable = false)
     private Department deptCode; // 부서 코드
 
     @Column(nullable = false)
-    private String dept_detail; // 교직원 구분
-
-    @Embeddable
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class EmployeeId implements Serializable {
-        @OneToOne
-        @JoinColumn(name = "empCode", unique = true, referencedColumnName = "userCode")
-        private User userCode;
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            EmployeeId that = (EmployeeId) o;
-            return Objects.equals(userCode, that.userCode);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(userCode);
-        }
-    }
-
+    private String deptDetail; // 교직원 구분
 }

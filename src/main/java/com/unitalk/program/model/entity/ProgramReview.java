@@ -18,11 +18,11 @@ public class ProgramReview {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer reviewId; // 집단상담 후기 ID(PK)
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "programId", referencedColumnName = "programId", nullable = false)
     private ProgramApplicant programId; // 집단상담 신청 번호(FK)
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "studentCode", referencedColumnName = "studentCode", nullable = false)
     private ProgramApplicant studentCode; // 집단상담 신청 학번(FK)
 

@@ -1,6 +1,7 @@
 package com.unitalk.program.model.entity;
 
 import com.unitalk.common.model.entity.Employee;
+import com.unitalk.program.model.dto.response.ProgramResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,8 +22,9 @@ public class Program {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer programId; // 집단상담 번호(PK)
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "counselorCode", referencedColumnName = "empCode", nullable = false)
+    @ManyToOne//(fetch = FetchType.LAZY)
+    @JoinColumn(name = "counselorCode", referencedColumnName = "empCode", unique = false)
+    // User 테이블에서 유니크가 설정되어 있기 때문에 Program 테이블에서 유니크 삭제
     private Employee counselorCode; // 상담사 코드(FK)
 
     @Column(nullable = false)
@@ -49,4 +51,38 @@ public class Program {
 
     @ColumnDefault("0") // 기본값 0
     private Integer viewCnt; // 조회수
+
+    public ProgramResponse toDto() {
+        return ProgramResponse.builder()
+                .programId(programId)
+                .counselorCode(counselorCode)
+                .programName(programName)
+                .programContent(programContent)
+                .recruitStart(recruitStart)
+                .recruitEnd(recruitEnd)
+                .operationStart(operationStart)
+                .operationEnd(operationEnd)
+                .programSession(programSession)
+                .recruitNum(recruitNum)
+                .status(status)
+                .viewCnt(viewCnt)
+                .build();
+    }
+
+    // 엔티티 필드 업데이트
+    public void update(String programName, String programContent, LocalDateTime recruitStart, LocalDateTime recruitEnd,
+                       LocalDateTime operationStart, LocalDateTime operationEnd, Integer programSession,
+                       Integer recruitNum, Character status, Integer viewCnt) {
+        this.programName = programName;
+        this.programContent = programContent;
+        this.recruitStart = recruitStart;
+        this.recruitEnd = recruitEnd;
+        this.operationStart = operationStart;
+        this.operationEnd = operationEnd;
+        this.programSession = programSession;
+        this.recruitNum = recruitNum;
+        this.status = status;
+        this.viewCnt = viewCnt;
+    }
+
 }

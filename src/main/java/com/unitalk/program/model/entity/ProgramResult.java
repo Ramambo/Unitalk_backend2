@@ -20,11 +20,11 @@ public class ProgramResult {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer resultId; // 집단상담 결과 번호(PK)
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "programId", nullable = false)
     private Program programId; // 집단상담 번호(FK)
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "counselorCode", referencedColumnName = "counselorCode", nullable = false)
     private Program counselorCode; // 상담사 코드(FK)
 

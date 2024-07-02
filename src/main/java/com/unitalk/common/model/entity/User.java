@@ -1,10 +1,14 @@
 package com.unitalk.common.model.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +26,7 @@ public class User{
     @Column(nullable = false)
     private String password; //사용자 암호
 
+    @CreatedDate
     @Column(nullable = false)
     private LocalDateTime createDate; // 생성일
 

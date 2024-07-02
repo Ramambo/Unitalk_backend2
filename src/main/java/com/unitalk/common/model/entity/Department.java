@@ -23,7 +23,7 @@ public class Department {
     @Column(nullable = false)
     private String deptName; // 부서명
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "upDeptCode", referencedColumnName = "deptCode")
     private Department upDeptCode; // 상위 부서코드(FK)
 }

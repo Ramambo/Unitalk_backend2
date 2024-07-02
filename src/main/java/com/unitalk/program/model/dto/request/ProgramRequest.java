@@ -1,6 +1,5 @@
 package com.unitalk.program.model.dto.request;
 
-import com.unitalk.common.model.entity.Department;
 import com.unitalk.common.model.entity.Employee;
 import com.unitalk.program.model.entity.Program;
 import lombok.AllArgsConstructor;
@@ -22,14 +21,13 @@ public class ProgramRequest {
     private LocalDateTime operationEnd; // 운영종료일
     private Integer programSession; // 회차
     private Integer recruitNum; // 모집인원
-    private Department deptCode; // 모집학과 코드(FK)
-    private Integer recruitGrade; // 모집학년
-    private Integer participantNum; // 참여인원
     private Character status; // 상태
+    private Integer viewCnt; // 조회수
 
     // DTO 객체를 엔티티로 변환
     public Program toEntity() {
         return Program.builder()
+                .counselorCode(counselorCode)
                 .programName(programName)
                 .programContent(programContent)
                 .recruitStart(recruitStart)
@@ -38,6 +36,8 @@ public class ProgramRequest {
                 .operationEnd(operationEnd)
                 .programSession(programSession)
                 .recruitNum(recruitNum)
+                .status(status)
+                .viewCnt(viewCnt)
                 .build();
     }
 }

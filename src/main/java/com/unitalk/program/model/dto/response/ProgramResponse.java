@@ -1,6 +1,5 @@
 package com.unitalk.program.model.dto.response;
 
-import com.unitalk.common.model.entity.Department;
 import com.unitalk.common.model.entity.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,9 +23,6 @@ public class ProgramResponse {
     private LocalDateTime operationEnd; // 운영종료일
     private Integer programSession; // 회차
     private Integer recruitNum; // 모집인원
-    private Department deptCode; // 모집학과 코드(FK)
-    private Integer recruitGrade; // 모집학년
-    private Integer participantNum; // 참여인원
     private Character status; // 상태
     private Integer viewCnt; // 조회수
 }

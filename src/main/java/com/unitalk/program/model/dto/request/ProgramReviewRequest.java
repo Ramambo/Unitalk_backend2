@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class ProgramReviewRequest {
     private ProgramApplicant programId; // 집단상담 신청 번호(FK)
+    private ProgramApplicant studentCode; // 집단상담 신청 학번(FK)
     private BigDecimal rating; // 별점
     private String reviewContent; // 집단상담후기 내용
 
@@ -20,6 +21,7 @@ public class ProgramReviewRequest {
     public ProgramReview toEntity() {
         return ProgramReview.builder()
                 .programId(programId)
+                .studentCode(studentCode)
                 .rating(rating)
                 .reviewContent(reviewContent)
                 .build();
