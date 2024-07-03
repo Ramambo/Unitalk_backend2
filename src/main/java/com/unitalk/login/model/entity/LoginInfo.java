@@ -14,12 +14,13 @@ public class LoginInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userNo;
+    private Integer loginNo;
 
+    @Column(unique = true, nullable = false)
     private Integer userId;
 
     private String password;
 
-    private byte userType;
+    private String userType;
 
 }

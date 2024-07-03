@@ -18,13 +18,9 @@ public class ProfessorAssignment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer assignmentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "studentId")
-    private User studentId;
+    private Integer studentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "professorId")
-    private User professorId;
+    private Integer professorId;
 
     private Timestamp assignmentDate;
 

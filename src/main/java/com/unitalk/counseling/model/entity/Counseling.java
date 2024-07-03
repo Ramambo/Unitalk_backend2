@@ -1,60 +1,64 @@
 package com.unitalk.counseling.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.unitalk.common.model.entity.Department;
-import com.unitalk.common.model.entity.User;
+import com.unitalk.common.model.entity.Employee;
+import com.unitalk.common.model.entity.Student;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(name = "Counseling")
-@NoArgsConstructor
+@Setter
+@Table(name = "counseling")
+@Builder
+@EntityListeners(AuditingEntityListener.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reqNo")
 public class Counseling {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int reqNo;
+    private long reqNo;  // 상담신청번호
 
     @ManyToOne
     @JoinColumn(name = "studentId")
-    private User studentId;
+    private Student student;  // 학생ID
 
     @ManyToOne
     @JoinColumn(name = "counselorId")
-    private User counselorId;
+    private Employee counselorId;    // 상담사ID
 
+    private LocalDate counselDate;  // 상담일(학생이 선택한 날짜)
+    
     @ManyToOne
     @JoinColumn(name = "schNo")
-    private CounselorSchedule schNo;
+    private CounselorSchedule schedule; // 학생이 선택한 시간
 
-    private Timestamp applicationDate;
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime applicationDate;  // 신청일시
 
-    private byte reqTime;
+    private long counselMode;   // 대면1|비대면2
 
-    private byte counselMode;
+    @Column(nullable = false)
+    private String counselType; // 상담분야
 
-    @ManyToOne
-    @JoinColumn(name = "counselType")
-    private Department counselType;
+    private String applicationContent; // 신청내용
 
-    private String applicationContent;
+    private long status;    // 진행상태
 
-    private byte status;
+    private String counselContent;  // 상담기록(상담사가 작성함)
 
-    private String counselContent;
-
-    private Timestamp counselDate;
+    @LastModifiedDate
+    private LocalDateTime recordTime;   // 상담기록을 작성한 시각
 
     @ManyToOne
     @JoinColumn(name = "previousReqNo")
-    private Counseling previousReqNo;
+    private Counseling previousReqCounseling;   // 이전상담번호
 
 }
