@@ -1,6 +1,7 @@
 package com.unitalk.program.model.entity;
 
 import com.unitalk.common.model.entity.Student;
+import com.unitalk.program.model.dto.response.ProgramApplicantResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +27,7 @@ public class ProgramApplicant {
     private Program programId; // 집단상담 번호(FK)
 
     @ManyToOne//(fetch = FetchType.LAZY)
-    @JoinColumn(name = "studentCode", referencedColumnName = "studentCode", nullable = false)
+    @JoinColumn(unique = false, name = "studentCode", referencedColumnName = "studentCode")
     private Student studentCode; // 학생 코드(FK)
 
     @CreatedDate
@@ -35,4 +36,15 @@ public class ProgramApplicant {
 
     @Column(nullable = false)
     private Character status; // 신청상태
+
+    public ProgramApplicantResponse toDto() {
+        return ProgramApplicantResponse.builder()
+                .applicantId(applicantId)
+                .programId(programId)
+                .studentCode(studentCode)
+                .applicantDate(applicantDate)
+                .status(status)
+                .build();
+    }
+
 }

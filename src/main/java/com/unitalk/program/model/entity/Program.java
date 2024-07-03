@@ -23,7 +23,7 @@ public class Program {
     private Integer programId; // 집단상담 번호(PK)
 
     @ManyToOne//(fetch = FetchType.LAZY)
-    @JoinColumn(unique = false, name = "counselorCode", referencedColumnName = "empCode", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(unique = false, name = "counselorCode", referencedColumnName = "empCode")
     // foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT) 외래키 삭제
     private Employee counselorCode; // 상담사 코드(FK)
 

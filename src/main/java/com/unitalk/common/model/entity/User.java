@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Table(name = "Users")
 public class User{
     @Id
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String userCode; //사용자 코드, 학번 및 교번
 
     @Column(nullable = false)

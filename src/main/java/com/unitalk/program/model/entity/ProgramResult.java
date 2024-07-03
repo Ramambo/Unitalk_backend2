@@ -25,7 +25,7 @@ public class ProgramResult {
     private Program programId; // 집단상담 번호(FK)
 
     @ManyToOne//(fetch = FetchType.LAZY)
-    @JoinColumn(name = "counselorCode", referencedColumnName = "counselorCode", nullable = false)
+    @JoinColumn(unique = false, name = "counselorCode", referencedColumnName = "counselorCode")
     private Program counselorCode; // 상담사 코드(FK)
 
     @Column(nullable = false)
