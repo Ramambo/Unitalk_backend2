@@ -6,10 +6,10 @@ import com.unitalk.program.model.entity.Program;
 import com.unitalk.program.repository.ProgramRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,9 +20,15 @@ public class ProgramService {
 
     // 집단상담 목록 조회
     @Transactional(readOnly = true)
-    public List<Program> retrieveAll() {
-        // ProgramRepository의 모든 Program 엔티티 조회, 내림차순으로 정렬
-        return programRepository.findAllByOrderByProgramIdDesc();
+    public Page<Program> retrieveAll(Pageable pageable) {
+        // ProgramRepository의 모든 Program 엔티티 조회
+        return programRepository.findAll(pageable);
+    }
+
+    // 검색 및 페이이지네이션
+    @Transactional(readOnly = true)
+    public Page<Program> searchPrograms(String keyword, Pageable pageable) {
+        return programRepository.searchByKeyword(keyword, pageable);
     }
 
     // 집단상담 조회

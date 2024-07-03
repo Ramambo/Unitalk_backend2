@@ -2,10 +2,14 @@ package com.unitalk.program.controller;
 
 import com.unitalk.program.model.dto.request.ProgramRequest;
 import com.unitalk.program.model.dto.response.ProgramResponse;
+import com.unitalk.program.model.entity.Program;
 import com.unitalk.program.service.ProgramService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +25,25 @@ public class ProgramController {
     // 집단상담 목록 조회
     @GetMapping("/programs")
     // <?>는 제네릭 와일드카드로 반환 타입을 알 수 없을 때 사용
-    public ResponseEntity<?> getAllProgram() {
-        // 서버 로그파일 또는 콘솔에 로그 메세지 기록, 호출 시 확인
-        log.info("Reteieved list of programs");
-        // ok() 200 ok 상태의 코드 반환
-        return ResponseEntity.ok(programService.retrieveAll());
+    public ResponseEntity<?> getAllProgram( @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Program> programPage = programService.retrieveAll(pageable);
+        return ResponseEntity.ok(programPage);
     }
+
+    // 검색 집단상담 목록 조회
+    @GetMapping("/search/programs")
+    public ResponseEntity<?> searchPrograms(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Program> programPage = programService.searchPrograms(keyword, pageable);
+        return ResponseEntity.ok(programPage);
+    }
+
 
     // 집단상담 조회
     @GetMapping("/program/{programId}")
