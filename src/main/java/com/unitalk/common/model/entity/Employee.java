@@ -16,13 +16,13 @@ public class Employee {
 
     @Id
     @Column(name = "employee_id", nullable = false)
-    private Integer employeeId; //교직원 ID(직번)
+    private Long employeeId; //교직원 ID(직번)
 
     @Column(name = "dept_id", nullable = false)
     private String deptId; //부서코드(부서/학과)
 
     @Column(name = "login_no", nullable = false)
-    private Integer loginNo; //로그인일련번호
+    private Long loginNo; //로그인일련번호
 
     @Column(name = "employee_name", nullable = false)
     private String employeeName; //교직원 이름
@@ -40,7 +40,7 @@ public class Employee {
     private String deptDetail; //교직원구분
 
     @Builder
-    private Employee(Integer employeeId, String deptId, Integer loginNo, String employeeName, String employeeEmail, String employeePhoneNumber, LocalDate employeeRegistrationYear, String deptDetail) {
+    private Employee(Long employeeId, String deptId, Long loginNo, String employeeName, String employeeEmail, String employeePhoneNumber, LocalDate employeeRegistrationYear, String deptDetail) {
         this.employeeId = employeeId;
         this.deptId = deptId;
         this.loginNo = loginNo;

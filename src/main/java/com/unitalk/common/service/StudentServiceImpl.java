@@ -1,5 +1,6 @@
 package com.unitalk.common.service;
 
+import com.unitalk.common.model.entity.Employee;
 import com.unitalk.common.model.entity.Student;
 import com.unitalk.common.repository.StudentRepository;
 import com.unitalk.emp.model.dto.StudentListItem;
@@ -24,14 +25,19 @@ public class StudentServiceImpl implements StudentService {
         // 전체 학생들의 정보를 데이터베이스에서 조회합니다.
         List<Student> students = studentRepository.findAll();
         return students.stream()
-                .map(student -> new StudentListItem(
-                        student.getStudentId(),
-                        student.getDeptId(),
-                        student.getStudentName(),
-                        student.getStudentEmail(),
-                        student.getStudentPhoneNumber(),
-                        student.getGrade(),
-                        student.getEmployee()))
+                .map(student -> {
+                    Employee employee = student.getEmployee();
+                    String employeeName = employee != null ? employee.getEmployeeName() : "미배정";
+                    return new StudentListItem(
+                            student.getStudentId(),
+                            student.getDeptId(),
+                            student.getStudentName(),
+                            student.getStudentEmail(),
+                            student.getStudentPhoneNumber(),
+                            student.getGrade(),
+                            employeeName
+                    );
+                })
                 .collect(Collectors.toList());
     }
 }

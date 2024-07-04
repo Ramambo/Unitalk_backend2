@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 @Getter
 public class ProfessorAssignmentResponse {
 
-    private Integer assignmentId;
-    private Integer professorId;
-    private Integer studentId;
+    private Long assignmentId;
+    private Long professorId;
+    private Long studentId;
     private LocalDateTime assignmentDate;
 
     public ProfessorAssignmentResponse(ProfessorAssignment entity) {

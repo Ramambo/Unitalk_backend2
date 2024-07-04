@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProfessorAssignmentRequest {
 
-    private Integer professorId;
-    private Integer studentId;
+    private Long professorId;
+    private Long studentId;
 
     public ProfessorAssignment toEntity() {
         return ProfessorAssignment.builder()

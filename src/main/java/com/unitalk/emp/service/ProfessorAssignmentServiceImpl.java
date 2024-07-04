@@ -38,7 +38,7 @@ public class ProfessorAssignmentServiceImpl implements ProfessorAssignmentServic
         student.setEmployeeId(professor);
         studentRepository.save(student);
 
-        return (long) professorAssignment.getAssignmentId();
+        return professorAssignment.getAssignmentId();
     }
 
 }

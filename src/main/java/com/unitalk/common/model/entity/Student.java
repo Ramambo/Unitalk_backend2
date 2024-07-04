@@ -16,13 +16,13 @@ public class Student {
 
     @Id
     @Column(name = "student_id", nullable = false)
-    private Integer studentId; //학생 ID(학번)
+    private Long studentId; //학생 ID(학번)
 
     @Column(name = "dept_id", nullable = false)
     private String deptId; //부서코드(학과)
 
     @Column(name = "login_no", nullable = false)
-    private Integer loginNo; //로그인일련번호
+    private Long loginNo; //로그인일련번호
 
     @Column(name = "student_name", nullable = false)
     private String studentName; //학생 이름
@@ -37,14 +37,14 @@ public class Student {
     private LocalDate studentRegistrationYear; //입학연월일
 
     @Column(name = "grade", nullable = false)
-    private Integer grade; //학년
+    private Long grade; //학년
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee; //교직원 ID(지도교수)
 
     @Builder
-    public Student(Integer studentId, String deptId, Integer loginNo, String studentName, String studentEmail, String studentPhoneNumber, LocalDate studentRegistrationYear, Integer grade) {
+    public Student(Long studentId, String deptId, Long loginNo, String studentName, String studentEmail, String studentPhoneNumber, LocalDate studentRegistrationYear, Long grade) {
         this.studentId = studentId;
         this.deptId = deptId;
         this.loginNo = loginNo;

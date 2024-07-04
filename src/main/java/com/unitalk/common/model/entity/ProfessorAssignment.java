@@ -17,19 +17,19 @@ public class ProfessorAssignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "assignment_id", nullable = false)
-    private Integer assignmentId; //지도교수 배정 이력 일련번호, PK
+    private Long assignmentId; //지도교수 배정 이력 일련번호, PK
 
     @Column(name = "professor_id", nullable = false)
-    private Integer professorId; //교수 ID, FK
+    private Long professorId; //교수 ID, FK
 
     @Column(name = "student_id", nullable = false)
-    private Integer studentId; //학생 ID, FK
+    private Long studentId; //학생 ID, FK
 
     @Column(name = "assignment_date", nullable = false)
     private LocalDateTime assignmentDate; //지도교수 배정 일시
 
     @Builder
-    public ProfessorAssignment(Integer professorId, Integer studentId) {
+    public ProfessorAssignment(Long professorId, Long studentId) {
         this.professorId = professorId;
         this.studentId = studentId;
     }
