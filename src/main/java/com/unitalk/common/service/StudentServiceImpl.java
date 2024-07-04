@@ -20,9 +20,10 @@ public class StudentServiceImpl implements StudentService {
         this.studentRepository = studentRepository;
     }
 
+    //전체 학생목록 조회
     @Override
     public List<StudentListItem> getAllStudents() {
-        // 전체 학생들의 정보를 데이터베이스에서 조회합니다.
+        //전체 학생들의 정보를 데이터베이스에서 조회합니다.
         List<Student> students = studentRepository.findAll();
         return students.stream()
                 .map(student -> {

@@ -19,6 +19,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
+    //전체 교수목록 조회
     @Override
     public List<ProfessorListItem> getProfessors() {
         // "교수" 부서에 속하는 교직원들의 정보를 데이터베이스에서 조회합니다.
