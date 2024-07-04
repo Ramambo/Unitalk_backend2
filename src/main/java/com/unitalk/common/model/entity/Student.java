@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -15,10 +15,10 @@ import java.sql.Timestamp;
 public class Student {
 
     @Id
-    private Integer studentId;
+    private Long studentId;
 
     @Column(unique = true, nullable = false)
-    private Integer loginNo;
+    private Long loginNo;
 
     private String deptId;
 
@@ -28,8 +28,8 @@ public class Student {
 
     private String phoneNumber;
 
-    private Timestamp registrationYear;
+    private LocalDate registrationYear;
 
-    private Integer grade;
+    private Long grade;
 
 }

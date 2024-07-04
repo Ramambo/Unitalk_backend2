@@ -23,7 +23,7 @@ public class Counseling {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long reqNo;  // 상담신청번호
+    private Long reqNo;  // 상담신청번호
 
     @ManyToOne
     @JoinColumn(name = "studentId")
@@ -43,14 +43,14 @@ public class Counseling {
     @Column(nullable = false, updatable = false)
     private LocalDateTime applicationDate;  // 신청일시
 
-    private long counselMode;   // 대면1|비대면2
+    private Long counselMode;   // 대면1|비대면2
 
     @Column(nullable = false)
     private String counselType; // 상담분야
 
     private String applicationContent; // 신청내용
 
-    private long status;    // 진행상태
+    private Long status;    // 진행상태
 
     private String counselContent;  // 상담기록(상담사가 작성함)
 

@@ -46,7 +46,7 @@ public class CounselingController {
 
     // 학생의 모든 상담 정보 조회
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<Map<String, Object>> getCounselingsByStudentId(@PathVariable Integer studentId,
+    public ResponseEntity<Map<String, Object>> getCounselingsByStudentId(@PathVariable Long studentId,
                                                                                  @RequestParam(defaultValue = "0") int page,
                                                                                  @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -62,7 +62,7 @@ public class CounselingController {
 
     // 상담사의 모든 상담 정보 조회
     @GetMapping("/counselor/{counselorId}")
-    public ResponseEntity<Map<String, Object>> getCounselingsByCounselorId(@PathVariable Integer counselorId,
+    public ResponseEntity<Map<String, Object>> getCounselingsByCounselorId(@PathVariable Long counselorId,
                                                                                    @RequestParam(defaultValue = "0") int page,
                                                                                    @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);

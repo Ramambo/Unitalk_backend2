@@ -15,16 +15,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CounselingResponseDto {
 
-    private long reqNo;
+    private Long reqNo;
     private Student student;
     private Employee counselor;
     private LocalDate counselDate;
     private CounselorSchedule schedule;
     private LocalDateTime applicationDate;
-    private long counselMode;
+    private Long counselMode;
     private String counselType;
     private String applicationContent;
-    private long status;
+    private Long status;
     private String counselContent;
     private LocalDateTime recordTime;
 

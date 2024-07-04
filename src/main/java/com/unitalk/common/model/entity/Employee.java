@@ -15,9 +15,9 @@ import java.sql.Timestamp;
 public class Employee {
 
     @Id
-    private Integer empId;
+    private Long empId;
 
-    private Integer loginNo;
+    private Long loginNo;
 
     private String deptId;
 

@@ -14,10 +14,10 @@ public class LoginInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer loginNo;
+    private Long loginNo;
 
     @Column(unique = true, nullable = false)
-    private Integer userId;
+    private Long userId;
 
     private String password;
 

@@ -52,7 +52,7 @@ public class CounselingService {
         counseling.setCounselorId(counselor);
         counseling.setSchedule(scheduleRepository.findById(requestDto.getSchNo())
                 .orElseThrow(() -> new RuntimeException("Schedule not found")));
-        counseling.setStatus(1);
+        counseling.setStatus(2L);
         counseling.setApplicationDate(LocalDateTime.now());
 
         Counseling savedCounseling = counselingRepository.save(counseling);
@@ -65,7 +65,7 @@ public class CounselingService {
         Counseling counseling = counselingRepository.findById(reqNo)
                 .orElseThrow(() -> new RuntimeException("Counseling not found"));
         counseling.setCounselContent(counselContent);
-        counseling.setStatus(2);
+        counseling.setStatus(3L);
         counseling.setRecordTime(LocalDateTime.now());
 
         Counseling updatedCounseling = counselingRepository.save(counseling);
@@ -80,7 +80,7 @@ public class CounselingService {
     }
 
     // 학생ID로 해당 학생의 모든 상담 정보 조회
-    public Page<CounselingResponseDto> getCounselingsByStudentId(Integer studentId, Pageable pageable) {
+    public Page<CounselingResponseDto> getCounselingsByStudentId(Long studentId, Pageable pageable) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
         Page<Counseling> counselings = counselingRepository.findByStudentOrderByApplicationDateDesc(student, pageable);
@@ -88,7 +88,7 @@ public class CounselingService {
     }
 
     // 상담자ID로 해당 상담사의 모든 상담 정보 조회
-    public Page<CounselingResponseDto> getCounselingsByCounselorId(Integer counselorId, Pageable pageable) {
+    public Page<CounselingResponseDto> getCounselingsByCounselorId(Long counselorId, Pageable pageable) {
         Employee counselor = employeeRepository.findById(counselorId)
                 .orElseThrow(() -> new RuntimeException("Counselor not found"));
         Page<Counseling> counselings = counselingRepository.findByCounselorIdOrderByApplicationDateDesc(counselor, pageable);

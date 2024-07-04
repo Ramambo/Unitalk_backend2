@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -16,12 +16,12 @@ public class ProfessorAssignment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer assignmentId;
+    private Long assignmentId;
 
-    private Integer studentId;
+    private Long studentId;
 
-    private Integer professorId;
+    private Long professorId;
 
-    private Timestamp assignmentDate;
+    private LocalDate assignmentDate;
 
 }

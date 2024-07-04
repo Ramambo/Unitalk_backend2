@@ -17,7 +17,7 @@ public class CounselingReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long reviewNo;
+    private Long reviewNo;
 
     @ManyToOne
     @JoinColumn(name = "reqNo")

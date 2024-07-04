@@ -10,10 +10,10 @@ import lombok.*;
 @AllArgsConstructor
 public class CounselorScheduleResponseDto {
 
-    private long schNo;
+    private Long schNo;
     private Employee counselor;
     private String days;
-    private long availTime;
-    private long status;
+    private Long availTime;
+    private Long status;
 
 }

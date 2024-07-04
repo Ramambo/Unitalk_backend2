@@ -46,7 +46,7 @@ public class CounselorScheduleService {
     }
 
     // 상담사ID로 해당 상담사의 모든 스케쥴 조회
-    public List<CounselorScheduleResponseDto> getSchedulesByCounselorId(Integer counselorId) {
+    public List<CounselorScheduleResponseDto> getSchedulesByCounselorId(long counselorId) {
         Employee counselor = employeeRepository.findById(counselorId)
                 .orElseThrow(() -> new RuntimeException("Counselor not found"));
         List<CounselorSchedule> schedules = scheduleRepository.findByCounselor(counselor);

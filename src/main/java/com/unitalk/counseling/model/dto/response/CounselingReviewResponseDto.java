@@ -12,8 +12,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CounselingReviewResponseDto {
 
-    private long reviewNo;
-    private long reqNo;
+    private Long reviewNo;
+    private Long reqNo;
     private Student student;
     private BigDecimal rating;
     private String content;

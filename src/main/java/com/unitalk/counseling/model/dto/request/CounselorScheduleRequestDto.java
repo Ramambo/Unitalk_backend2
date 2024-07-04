@@ -9,9 +9,9 @@ import lombok.*;
 @AllArgsConstructor
 public class CounselorScheduleRequestDto {
 
-    private Integer counselorId;
+    private Long counselorId;
     private String days;
-    private long availTime;
-    private long status;
+    private Long availTime;
+    private Long status;
 
 }

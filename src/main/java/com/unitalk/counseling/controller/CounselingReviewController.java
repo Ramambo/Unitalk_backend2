@@ -33,7 +33,7 @@ public class CounselingReviewController {
 
     // 학생의 모든 상담 후기 조회
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<CounselingReviewResponseDto>> getReviewsByStudentId(@PathVariable Integer studentId) {
+    public ResponseEntity<List<CounselingReviewResponseDto>> getReviewsByStudentId(@PathVariable long studentId) {
         List<CounselingReviewResponseDto> responseDtos = reviewService.getReviewsByStudentId(studentId);
         return ResponseEntity.ok(responseDtos);
     }

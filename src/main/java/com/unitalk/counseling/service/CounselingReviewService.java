@@ -60,7 +60,7 @@ public class CounselingReviewService {
     }
 
     // 학생ID로 해당 학생의 모든 상담 후기 조회
-    public List<CounselingReviewResponseDto> getReviewsByStudentId(Integer studentId) {
+    public List<CounselingReviewResponseDto> getReviewsByStudentId(Long studentId) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
         List<CounselingReview> reviews = reviewRepository.findByStudent(student);
