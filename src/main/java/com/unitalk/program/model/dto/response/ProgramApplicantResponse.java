@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ProgramApplicantResponse {
-    private Integer applicantId; // 집단상담 신청 번호(PK)
+    private Long applicantId; // 집단상담 신청 번호(PK)
     private Program programId; // 집단상담 번호(FK)
     private Student studentCode; // 학생 코드(FK)
     private LocalDateTime applicantDate; // 신청일

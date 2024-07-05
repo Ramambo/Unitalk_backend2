@@ -31,5 +31,5 @@ public class User{
     private LocalDateTime createDate; // 생성일
 
     @Column(nullable = false)
-    private Integer userType; //사용자 구분
+    private Long userType; //사용자 구분
 }

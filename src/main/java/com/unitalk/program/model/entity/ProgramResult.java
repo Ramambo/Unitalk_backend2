@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class ProgramResult {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer resultId; // 집단상담 결과 번호(PK)
+    private Long resultId; // 집단상담 결과 번호(PK)
 
     @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "programId", nullable = false)
@@ -36,10 +36,10 @@ public class ProgramResult {
     private LocalDateTime resultDate;  // 집단상담 작성일
 
     @Column(nullable = false)
-    private Integer participantNum;  // 집단상담 참여인원
+    private Long participantNum;  // 집단상담 참여인원
 
     @Column(nullable = false)
-    private Integer programSession;  // 집단상담 회차
+    private Long programSession;  // 집단상담 회차
 
     @Column(nullable = false)
     private LocalDateTime operationDate;  // 집단상담 운영일

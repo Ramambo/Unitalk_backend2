@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ProgramResultResponse {
-    private Integer resultId; // 집단상담 결과 번호(PK)
+    private Long resultId; // 집단상담 결과 번호(PK)
     private Program programId; // 집단상담 번호(FK)
     private Program counselorCode; // 상담사 코드(FK)
     private String resultContent; // 집단상담 결과 내용
     private LocalDateTime resultDate;  // 집단상담 작성일
-    private Integer participantNum;  // 집단상담 참여인원
-    private Integer programSession;  // 집단상담 회차
+    private Long participantNum;  // 집단상담 참여인원
+    private Long programSession;  // 집단상담 회차
     private LocalDateTime operationDate;  // 집단상담 운영일
 }

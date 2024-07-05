@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 public class ProgramReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer reviewId; // 집단상담 후기 ID(PK)
+    private Long reviewId; // 집단상담 후기 ID(PK)
 
     @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "programId", referencedColumnName = "programId", nullable = false)

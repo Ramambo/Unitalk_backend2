@@ -10,6 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +20,7 @@ public class ProgramService {
 
     // ProgramRepository 타입의 객체 참조
     private final ProgramRepository programRepository;
+    private final ProgramImgService programImgService;
 
     // 집단상담 목록 조회
     @Transactional(readOnly = true)
@@ -33,7 +37,7 @@ public class ProgramService {
 
     // 집단상담 조회
     @Transactional(readOnly = true)
-    public Program retrieve (final Integer programId) {
+    public Program retrieve (final Long programId) {
         // programId로 ProgramRepository에서 해당 Program 엔티티 조회
         // findById는 Optional<Program> 반환 //Optional<Program> 값(엔티티)이 있을수도 없을 수도 있는 컨테이너 조회 및 처리 클래스
         return programRepository.findById(programId)
@@ -45,7 +49,7 @@ public class ProgramService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 없습니다. programId" + programId));
     }
     /* 람다식 미사용
-    public Program retrieve(final Integer programId) {
+    public Program retrieve(final Long programId) {
         Optional<Program> optionalProgram = programRepository.findById(programId);
         if (optionalProgram.isPresent()) {
             return optionalProgram.get();
@@ -56,9 +60,10 @@ public class ProgramService {
 
     // 집단상담 저장
     @Transactional
-    public ProgramResponse saveProgram(final ProgramRequest programRequest) {
+    public ProgramResponse saveProgram(ProgramRequest programRequest, List<MultipartFile> images) {
         // ProgramRequest 객체를 Program 엔티티로 변환, DB 저장
         Program saveProgram = programRepository.save(programRequest.toEntity());
+        programImgService.uploadProgramImg(saveProgram, images);
         // 저장된 데이터 기반 ProgramResponse 객체 생성 및 반환
         return ProgramResponse.builder()
                 .programId(saveProgram.getProgramId())
@@ -78,7 +83,7 @@ public class ProgramService {
 
     // 집단상담 수정
     @Transactional
-    public ProgramResponse updateProgram(final Integer programId, final ProgramRequest programRequest) {
+    public ProgramResponse updateProgram(final Long programId, final ProgramRequest programRequest) {
         // 집단상담 조회 retrieve 메서드 호출, programId에 해당 엔티티
         Program program = retrieve(programId);
         // 엔티티에 선언한 메서드 호출, ProgramRequest 데이터로 Program 업데이트
@@ -108,7 +113,7 @@ public class ProgramService {
 
     // 집단상담 삭제
     @Transactional
-    public void deleteProgram(final Integer programId) {
+    public void deleteProgram(final Long programId) {
         // programId에 해당하는 Program 엔티티 조회 후 delete로 삭제
         programRepository.delete(retrieve(programId));
         /* programRepository.deleteById(programId);을 사용하지 않는 이유

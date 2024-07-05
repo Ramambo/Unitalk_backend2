@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -20,7 +22,7 @@ import java.time.LocalDateTime;
 public class Program {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer programId; // 집단상담 번호(PK)
+    private Long programId; // 집단상담 번호(PK)
 
     @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(unique = false, name = "counselorCode", referencedColumnName = "empCode")
@@ -42,15 +44,18 @@ public class Program {
     private LocalDateTime operationEnd; // 운영종료일
 
     @ColumnDefault("1") // 기본값 1
-    private Integer programSession; // 회차
+    private Long programSession; // 회차
 
-    private Integer recruitNum; // 모집인원
+    private Long recruitNum; // 모집인원
 
     @Column(nullable = false)
     private Character status; // 상태
 
     @ColumnDefault("0") // 기본값 0
-    private Integer viewCnt; // 조회수
+    private Long viewCnt; // 조회수
+
+    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ProgramImg> programImgs = new ArrayList<>();
 
     public ProgramResponse toDto() {
         return ProgramResponse.builder()
@@ -71,8 +76,8 @@ public class Program {
 
     // 엔티티 필드 업데이트
     public void update(String programName, String programContent, LocalDateTime recruitStart, LocalDateTime recruitEnd,
-                       LocalDateTime operationStart, LocalDateTime operationEnd, Integer programSession,
-                       Integer recruitNum, Character status, Integer viewCnt) {
+                       LocalDateTime operationStart, LocalDateTime operationEnd, Long programSession,
+                       Long recruitNum, Character status, Long viewCnt) {
         this.programName = programName;
         this.programContent = programContent;
         this.recruitStart = recruitStart;

@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class ProgramApplicant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer applicantId; // 집단상담 신청 번호(PK)
+    private Long applicantId; // 집단상담 신청 번호(PK)
 
     @ManyToOne//(fetch = FetchType.LAZY)
     @JoinColumn(name = "programId", nullable = false)

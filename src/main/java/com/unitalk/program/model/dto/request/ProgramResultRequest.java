@@ -15,8 +15,8 @@ public class ProgramResultRequest {
     private Program programId; // 집단상담 번호(FK)
     private Program counselorCode; // 상담사 코드(FK)
     private String resultContent; // 집단상담 결과 내용
-    private Integer participantNum;  // 집단상담 참여인원
-    private Integer programSession;  // 집단상담 회차
+    private Long participantNum;  // 집단상담 참여인원
+    private Long programSession;  // 집단상담 회차
     private LocalDateTime operationDate;  // 집단상담 운영일
 
     // DTO 객체를 엔티티로 변환

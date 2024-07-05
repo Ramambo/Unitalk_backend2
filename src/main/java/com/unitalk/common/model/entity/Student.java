@@ -24,7 +24,7 @@ public class Student {
     private String name; // 이름
 
     @Column(nullable = false)
-    private Integer grade; // 학년
+    private Long grade; // 학년
 
     @Column(nullable = false)
     private LocalDateTime admissionDate; // 입학일
