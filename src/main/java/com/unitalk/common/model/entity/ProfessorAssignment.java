@@ -16,15 +16,15 @@ public class ProfessorAssignment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer assignmentId;
+    private Long assignmentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "studentId")
-    private User studentId;
+    private Student studentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professorId")
-    private User professorId;
+    private Employee professorId;
 
     private Timestamp assignmentDate;
 

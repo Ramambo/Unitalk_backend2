@@ -1,30 +1,32 @@
 package com.unitalk.counseling.model.entity;
 
-import com.unitalk.common.model.entity.User;
+import com.unitalk.common.model.entity.Employee;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
-@Getter
+@Getter @Setter
 @Table(name = "Counselor_Schedule")
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class CounselorSchedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int schNo;
+    private Long schNo;
 
     @ManyToOne
     @JoinColumn(name = "counselorId")
-    private User counselorId;
+    private Employee counselorId;
 
-    private String days;
+    private String days; // 요일
 
-    private byte availTime;
+    private Long availTime; // 학교의 1~9교시를 숫자로 저장
 
-    private byte status;
+    private Long status; // 예약상태 활성1, 비활성 2
 
 }
