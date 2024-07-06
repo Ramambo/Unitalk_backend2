@@ -4,26 +4,26 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Builder
 @Table(name = "Departments")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "deptCode")
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "deptId")
 public class Department {
+
     @Id
-    @Column(nullable = false)
-    private String deptCode; // 부서 코드(PK)
+    @Column(name = "dept_id")   // 부서코드
+    private String deptId;
 
-    @Column(nullable = false)
-    private String deptName; // 부서명
+    @Column(name = "dept_name", nullable = false) // 부서명
+    private String deptName;
 
-    @ManyToOne//(fetch = FetchType.LAZY)
-    @JoinColumn(name = "upDeptCode", referencedColumnName = "deptCode")
-    private Department upDeptCode; // 상위 부서코드(FK)
+    @ManyToOne
+    @JoinColumn(name = "up_dept_id")    // 상위부서코드
+    private Department upDeptId;
+
 }

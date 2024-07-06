@@ -1,35 +1,48 @@
 package com.unitalk.common.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.unitalk.login.model.entity.LoginInfo;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Builder
 @Table(name = "Users")
-public class User{
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "userId")
+public class User {
+
     @Id
-    @Column(unique = true, nullable = false)
-    private String userCode; //사용자 코드, 학번 및 교번
+    @Column(name = "user_id")   // 사용자ID
+    private Long userId;
 
-    @Column(nullable = false)
-    private String password; //사용자 암호
+    @ManyToOne
+    @JoinColumn(name = "dept_id", nullable = false) // 부서코드
+    private Department department;
 
-    @CreatedDate
-    @Column(nullable = false)
-    private LocalDateTime createDate; // 생성일
+    @Column(name = "user_name", nullable = false)   // 이름
+    private String userName;
 
-    @Column(nullable = false)
-    private Long userType; //사용자 구분
+    @Column(name = "tel")   // 전화번호
+    private String tel;
+
+    @Column(name = "email") // 이메일
+    private String email;
+
+    @Column(name = "user_type", nullable = false)   // 사용자 구분
+    private String userType;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Student student;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Employee employee;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private LoginInfo loginInfo;
+
 }

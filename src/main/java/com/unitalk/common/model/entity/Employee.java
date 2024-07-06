@@ -1,41 +1,35 @@
 package com.unitalk.common.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Builder
 @Table(name = "Employees")
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "employeeNo")
 public class Employee {
+
     @Id
-    @OneToOne//(fetch = FetchType.LAZY) // 1:1 관계의 경우 PK 또는 복합키가 해당 컬럼이어야 한다.
-    @JoinColumn(name = "empCode", referencedColumnName = "userCode")
-    private User empCode;
+    @Column(name = "employee_no", nullable = false) // 교직원일련번호
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long employeeNo;
 
-    @Column(nullable = false)
-    private String name; // 이름
+    @OneToOne
+    @JoinColumn(name = "employee_id", unique = true, nullable = false) // 학생번호
+    private User user;
 
-    @Column(nullable = false)
-    private LocalDate hireDate; // 입사일
+    @Column(name = "hire_date", nullable = false)   // 입사일
+    private LocalDate hireDate;
 
-    @Column(nullable = false)
-    private String email; // 이메일
+    @Column(name = "dept_detail")   // 교직원구분
+    private String deptDetail;
 
-    @Column(nullable = false)
-    private String phone; // 전화번호
-
-    @ManyToOne//(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deptCode", referencedColumnName = "deptCode", nullable = false)
-    private Department deptCode; // 부서 코드
-
-    @Column(nullable = false)
-    private String deptDetail; // 교직원 구분
 }

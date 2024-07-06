@@ -1,21 +1,18 @@
 package com.unitalk.program.controller;
 
-import com.unitalk.program.model.dto.request.ProgramRequest;
-import com.unitalk.program.model.dto.response.ProgramResponse;
-import com.unitalk.program.model.entity.Program;
+import com.unitalk.program.model.dto.request.ProgramRequestDto;
+import com.unitalk.program.model.dto.response.ProgramResponseDto;
 import com.unitalk.program.service.ProgramService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Slf4j
 @RestController
@@ -27,72 +24,60 @@ public class ProgramController {
 
     // 집단상담 목록 조회
     @GetMapping("/programs")
-    // <?>는 제네릭 와일드카드로 반환 타입을 알 수 없을 때 사용
-    public ResponseEntity<?> getAllProgram( @RequestParam(defaultValue = "0") int page,
-                                            @RequestParam(defaultValue = "16") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Program> programPage = programService.retrieveAll(pageable);
-        return ResponseEntity.ok(programPage);
+    public ResponseEntity<Page<ProgramResponseDto>> getAllPrograms(Pageable pageable) {
+        Page<ProgramResponseDto> programs = programService.getAllPrograms(pageable);
+        return new ResponseEntity<>(programs, HttpStatus.OK);
     }
 
-    // 검색 집단상담 목록 조회
-    @GetMapping("/search/programs")
-    public ResponseEntity<?> searchPrograms(
-            @RequestParam String keyword,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "16") int size) {
+    // 집단상담 필터 및 검색
+    @GetMapping("/programs/search")
+    public ResponseEntity<Page<ProgramResponseDto>> getProgramsByFilters(
+            @RequestParam(required = false) Long counselorNo,
+            @RequestParam(required = false) String programName,
+            @RequestParam(required = false) String programContent,
+            @RequestParam(required = false) LocalDate recruitStart,
+            @RequestParam(required = false) LocalDate recruitEnd,
+            @RequestParam(required = false) LocalDate operationStart,
+            @RequestParam(required = false) LocalDate operationEnd,
+            @RequestParam(required = false) Character status,
+            @RequestParam(required = false) Long viewCnt,
+            Pageable pageable) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Program> programPage = programService.searchPrograms(keyword, pageable);
-        return ResponseEntity.ok(programPage);
+        Page<ProgramResponseDto> programs = programService.getProgramsByFilters(
+                counselorNo, programName, programContent, recruitStart, recruitEnd,
+                operationStart, operationEnd, status, viewCnt, pageable);
+        return new ResponseEntity<>(programs, HttpStatus.OK);
     }
 
     // 집단상담 조회
-    @GetMapping("/program/{programId}")
-    // @PathVariable URL 경로에서 변수 값 추출
-    public ResponseEntity<?> getProgram(@PathVariable Long programId) {
-        ProgramResponse retrieve = programService.retrieve(programId).toDto();
-        log.info("Reteieved DTO: {}", retrieve);
-        return ResponseEntity.ok(retrieve);
+    @GetMapping("/program/{programNo}")
+    public ResponseEntity<ProgramResponseDto> getProgramById(@PathVariable Long programNo) {
+        ProgramResponseDto program = programService.getProgramById(programNo);
+        return new ResponseEntity<>(program, HttpStatus.OK);
     }
 
-    // 집단상담 저장
+    // 집단상담 작성
     @PostMapping("/program")
-    // @Valid를 사용해서 ProgramRequest 유효성 검사, BindingResult는 유효성 검사 결과 저장
-    public ResponseEntity<?> createProgram(@ModelAttribute @Valid ProgramRequest programRequest,
-                                           @RequestPart(required = false) List<MultipartFile> images,
-                                           BindingResult bindingResult) {
-        //유효성 검사에서 오류가 발생하면 로그에 오류를 기록, HTTP 400 Bad Request 응답과 오류 메시지 반환
-        if (bindingResult.hasErrors()) {
-            log.error("BindingResult: {}", bindingResult.getAllErrors());
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        }
-
-        ProgramResponse createProgram = programService.saveProgram(programRequest, images);
-        log.info("Created DTO: {}", createProgram);
-        return ResponseEntity.ok(createProgram);
+    public ResponseEntity<ProgramResponseDto> createProgram(@Valid @RequestBody ProgramRequestDto requestDto) {
+        ProgramResponseDto program = programService.createProgram(requestDto);
+        return new ResponseEntity<>(program, HttpStatus.CREATED);
     }
 
     // 집단상담 수정
-    @PutMapping("/program/{programId}")
-    public ResponseEntity<?> updateProgram(@PathVariable Long programId, @RequestBody @Valid ProgramRequest programRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            log.error("BindingResult: {}", bindingResult.getAllErrors());
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-        }
+    @PutMapping("/program/{programNo}")
+    public ResponseEntity<ProgramResponseDto> updateProgram(
+            @PathVariable Long programNo,
+            @Valid @RequestBody ProgramRequestDto requestDto) {
 
-        ProgramResponse updateProgram = programService.updateProgram(programId, programRequest);
-        log.info("Updated DTO: {}", updateProgram);
-        return ResponseEntity.ok(updateProgram);
+        ProgramResponseDto program = programService.updateProgram(programNo, requestDto);
+        return new ResponseEntity<>(program, HttpStatus.OK);
     }
 
     // 집단상담 삭제
-    @DeleteMapping("/program/{programId}")
-    public ResponseEntity<?> deleteProgram(@PathVariable Long programId) {
-        programService.deleteProgram(programId);
-        log.info("Deleted DTO: {}", programId);
-        return ResponseEntity.ok("Successfully deleted programId" + programId);
+    @DeleteMapping("/program/{programNo}")
+    public ResponseEntity<Void> deleteProgram(@PathVariable Long programNo) {
+        programService.deleteProgram(programNo);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
 
 }

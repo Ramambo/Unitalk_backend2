@@ -1,45 +1,39 @@
 package com.unitalk.common.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Builder
 @Table(name = "Students")
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "studentNo")
 public class Student {
+
     @Id
-    @OneToOne//(fetch = FetchType.LAZY) // 1:1 관계 또는 식별관계의 경우 PK 또는 복합키가 해당 컬럼이어야 한다.(jpa 데이터 무결성)
-    @JoinColumn(name = "studentCode", referencedColumnName = "userCode")
-    private User studentCode; // 사용자 엔티티와 매핑
+    @Column(name = "student_no")    // 학생일련번호
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long studentNo;
 
-    @Column(nullable = false)
-    private String name; // 이름
+    @OneToOne
+    @JoinColumn(name = "student_id", unique = true, nullable = false) // 학생번호
+    private User user;
 
-    @Column(nullable = false)
-    private Long grade; // 학년
+    @Column(name = "reg_date", nullable = false)  // 입학일
+    private LocalDate regDate;
 
-    @Column(nullable = false)
-    private LocalDateTime admissionDate; // 입학일
+    @Column(name = "grade", nullable = false) // 학년
+    private Long grade;
 
-    @Column(nullable = false)
-    private String email; // 이메일
+    @ManyToOne
+    @JoinColumn(name = "professor_no")  // 교수일련번호
+    private Employee professor;
 
-    @Column(nullable = false)
-    private String phone; // 전화번호
-
-    @ManyToOne//(fetch = FetchType.LAZY)
-    @JoinColumn(name = "empCode", referencedColumnName = "empCode", nullable = false)
-    private Employee empCode; // 지도교수
-
-    @ManyToOne//(fetch = FetchType.LAZY)
-    @JoinColumn(name = "deptCode", referencedColumnName = "deptCode", nullable = false)
-    private Department deptCode; // 학과 코드
 }
