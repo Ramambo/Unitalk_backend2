@@ -1,5 +1,6 @@
 package com.unitalk.common.model.entity;
 
+import com.unitalk.login.model.entity.LoginInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class User {
     private Long userId;
     
     @ManyToOne
-    @JoinColumn(name = "detp_id", nullable = false) // 부서코드
+    @JoinColumn(name = "dept_id", nullable = false) // 부서코드
     private Department department;  
     
     @Column(name = "user_name", nullable = false)   // 이름
@@ -31,5 +32,14 @@ public class User {
     
     @Column(name = "user_type", nullable = false)   // 사용자 구분
     private String userType;
-    
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Student student;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Employee employee;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private LoginInfo loginInfo;
+
 }

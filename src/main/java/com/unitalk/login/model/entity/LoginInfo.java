@@ -19,7 +19,7 @@ public class LoginInfo {
     private Long loginNo;
 
     @OneToOne
-    @JoinColumn(name = "user_id", nullable = false) // 사용자ID
+    @JoinColumn(name = "user_id", unique = true, nullable = false) // 사용자ID
     private User user;
 
     @Column(name = "pwd", nullable = false) // 비밀번호

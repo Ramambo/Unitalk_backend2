@@ -26,7 +26,7 @@ public class ProfessorAssignment {
     @Column(name = "assignment_date", nullable = false) // 배정일시
     private LocalDateTime assignmentDate;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "student_no", nullable = false)  // 학생일련번호
     private Student student;
 

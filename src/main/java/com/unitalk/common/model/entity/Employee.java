@@ -20,7 +20,7 @@ public class Employee {
     private Long employeeNo;
 
     @OneToOne
-    @JoinColumn(name = "employee_id", nullable = false) // 직원번호
+    @JoinColumn(name = "employee_id", unique = true, nullable = false) // 학생번호
     private User user;
 
     @Column(name = "hire_date", nullable = false)   // 입사일

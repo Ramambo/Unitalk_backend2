@@ -20,7 +20,7 @@ public class Student {
     private Long studentNo;
 
     @OneToOne
-    @JoinColumn(name = "student_id", nullable = false) // 학생번호
+    @JoinColumn(name = "student_id", unique = true, nullable = false) // 학생번호
     private User user;
 
     @Column(name = "reg_date", nullable = false)  // 입학일
