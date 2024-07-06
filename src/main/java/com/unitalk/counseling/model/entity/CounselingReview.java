@@ -20,11 +20,11 @@ public class CounselingReview {
     private Long reviewNo;
 
     @ManyToOne
-    @JoinColumn(name = "reqNo")
+    @JoinColumn(name = "req_no")
     private Counseling reqCounseling;
 
     @ManyToOne
-    @JoinColumn(name = "studentId")
+    @JoinColumn(name = "student_no")
     private Student student;
 
     private BigDecimal rating;

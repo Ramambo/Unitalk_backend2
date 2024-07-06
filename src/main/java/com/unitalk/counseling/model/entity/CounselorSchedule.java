@@ -14,11 +14,12 @@ import lombok.*;
 public class CounselorSchedule {
 
     @Id
+    @Column(name = "sch_no")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long schNo;
 
     @ManyToOne
-    @JoinColumn(name = "counselorId")
+    @JoinColumn(name = "counselor_no", nullable = false)
     private Employee counselor;
 
     private String days;    // 요일

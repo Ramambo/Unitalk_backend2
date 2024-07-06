@@ -41,7 +41,7 @@ public class CounselingReviewService {
     public CounselingReviewResponseDto createReview(CounselingReviewRequestDto requestDto) {
         Counseling counseling = counselingRepository.findById(requestDto.getReqNo())
                 .orElseThrow(() -> new RuntimeException("Counseling not found"));
-        Student student = studentRepository.findById(requestDto.getStudent())
+        Student student = studentRepository.findById(requestDto.getStudentNo())
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
         CounselingReview review = modelMapper.map(requestDto, CounselingReview.class);
@@ -60,8 +60,8 @@ public class CounselingReviewService {
     }
 
     // 학생ID로 해당 학생의 모든 상담 후기 조회
-    public List<CounselingReviewResponseDto> getReviewsByStudentId(Long studentId) {
-        Student student = studentRepository.findById(studentId)
+    public List<CounselingReviewResponseDto> getReviewsByStudentNo(Long studentNo) {
+        Student student = studentRepository.findById(studentNo)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
         List<CounselingReview> reviews = reviewRepository.findByStudent(student);
         return reviews.stream()
@@ -70,7 +70,7 @@ public class CounselingReviewService {
     }
 
     // 상담 신청 번호로 해당 상담의 모든 리뷰 조회
-    public List<CounselingReviewResponseDto> getReviewsByCounselingId(Long reqNo) {
+    public List<CounselingReviewResponseDto> getReviewsByCounselingNo(Long reqNo) {
         Counseling counseling = counselingRepository.findById(reqNo)
                 .orElseThrow(() -> new RuntimeException("Counseling not found"));
         List<CounselingReview> reviews = reviewRepository.findByReqCounseling(counseling);

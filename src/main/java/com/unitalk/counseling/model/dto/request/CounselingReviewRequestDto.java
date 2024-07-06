@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class CounselingReviewRequestDto {
 
     private Long reqNo;
-    private Long student;
+    private Long studentNo;
     private BigDecimal rating;
     private String content;
 

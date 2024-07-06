@@ -1,5 +1,6 @@
 package com.unitalk.counseling.controller;
 
+import com.unitalk.counseling.model.dto.CounselingCountsDto;
 import com.unitalk.counseling.model.dto.request.CounselingRequestDto;
 import com.unitalk.counseling.model.dto.response.CounselingResponseDto;
 import com.unitalk.counseling.service.CounselingService;
@@ -7,10 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,34 +42,41 @@ public class CounselingController {
 
     // 상담 정보 개별 조회
     @GetMapping("/{reqNo}")
-    public ResponseEntity<CounselingResponseDto> getCounselingById(@PathVariable long reqNo) {
+    public ResponseEntity<CounselingResponseDto> getCounselingByNo(@PathVariable long reqNo) {
         CounselingResponseDto responseDto = counselingService.getCounselingById(reqNo);
         return ResponseEntity.ok(responseDto);
     }
 
     // 학생의 모든 상담 정보 조회
-    @GetMapping("/student/{studentId}")
-    public ResponseEntity<Map<String, Object>> getCounselingsByStudentId(@PathVariable Long studentId,
-                                                                                 @RequestParam(defaultValue = "0") int page,
-                                                                                 @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<CounselingResponseDto> responseDtos = counselingService.getCounselingsByStudentId(studentId, pageable);
+    @GetMapping("/student/{studentNo}")
+    public ResponseEntity<Page<CounselingResponseDto>> getCounselingsByStudentNo(
+            @PathVariable Long studentNo,
+            @RequestParam(required = false) Long counselMode,
+            @RequestParam(required = false) Long status,
+            @RequestParam(required = false) String counselType,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Pageable pageable) {
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("content", responseDtos.getContent());
-        response.put("currentPage", responseDtos.getNumber());
-        response.put("totalPages", responseDtos.getTotalPages());
+        Page<CounselingResponseDto> counselings = counselingService.getCounselingsByStudentNoWithFilters(
+                studentNo, counselMode, status, counselType, startDate, endDate, pageable);
+        return ResponseEntity.ok(counselings);
+    }
 
-        return ResponseEntity.ok(response);
+    // 상담 횟수 조회
+    @GetMapping("/student/{studentNo}/counts")
+    public ResponseEntity<CounselingCountsDto> getCounselingsByStudentNo(@PathVariable Long studentNo) {
+        CounselingCountsDto counts = counselingService.getCounselingCountsByStudentNo(studentNo);
+        return ResponseEntity.ok(counts);
     }
 
     // 상담사의 모든 상담 정보 조회
-    @GetMapping("/counselor/{counselorId}")
-    public ResponseEntity<Map<String, Object>> getCounselingsByCounselorId(@PathVariable Long counselorId,
+    @GetMapping("/counselor/{counselorNo}")
+    public ResponseEntity<Map<String, Object>> getCounselingsByCounselorNo(@PathVariable Long counselorNo,
                                                                                    @RequestParam(defaultValue = "0") int page,
                                                                                    @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<CounselingResponseDto> responseDtos = counselingService.getCounselingsByCounselorId(counselorId, pageable);
+        Page<CounselingResponseDto> responseDtos = counselingService.getCounselingsByCounselorNo(counselorNo, pageable);
 
         Map<String, Object> response = new HashMap<>();
         response.put("content", responseDtos.getContent());
@@ -75,4 +85,5 @@ public class CounselingController {
 
         return ResponseEntity.ok(response);
     }
+
 }

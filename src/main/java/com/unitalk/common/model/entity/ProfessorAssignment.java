@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,13 +15,19 @@ import java.time.LocalDate;
 public class ProfessorAssignment {
 
     @Id
+    @Column(name = "assignment_id") // 배정일련번호
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long assignmentId;
 
-    private Long studentId;
+    @ManyToOne
+    @JoinColumn(name = "professor_no", nullable = false)    // 교수일련번호
+    private Employee professor;
 
-    private Long professorId;
+    @Column(name = "assignment_date", nullable = false) // 배정일시
+    private LocalDateTime assignmentDate;
 
-    private LocalDate assignmentDate;
+    @OneToOne
+    @JoinColumn(name = "student_no", nullable = false)  // 학생일련번호
+    private Student student;
 
 }

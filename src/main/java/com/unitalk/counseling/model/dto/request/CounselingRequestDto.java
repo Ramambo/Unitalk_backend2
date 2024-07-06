@@ -11,8 +11,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CounselingRequestDto {
 
-    private Long studentId;
-    private Long counselorId;
+    private Long studentNo;
+    private Long counselorNo;
     private LocalDate counselDate;
     private Long schNo;
     private Long counselMode;

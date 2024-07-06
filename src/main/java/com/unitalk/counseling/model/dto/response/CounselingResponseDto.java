@@ -1,5 +1,6 @@
 package com.unitalk.counseling.model.dto.response;
 
+import com.unitalk.common.model.entity.Department;
 import com.unitalk.common.model.entity.Employee;
 import com.unitalk.common.model.entity.Student;
 import com.unitalk.counseling.model.entity.CounselorSchedule;
@@ -22,7 +23,7 @@ public class CounselingResponseDto {
     private CounselorSchedule schedule;
     private LocalDateTime applicationDate;
     private Long counselMode;
-    private String counselType;
+    private Department counselType;
     private String applicationContent;
     private Long status;
     private String counselContent;

@@ -32,16 +32,16 @@ public class CounselingReviewController {
     }
 
     // 학생의 모든 상담 후기 조회
-    @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<CounselingReviewResponseDto>> getReviewsByStudentId(@PathVariable long studentId) {
-        List<CounselingReviewResponseDto> responseDtos = reviewService.getReviewsByStudentId(studentId);
+    @GetMapping("/student/{studentNo}")
+    public ResponseEntity<List<CounselingReviewResponseDto>> getReviewsByStudentNo(@PathVariable long studentNo) {
+        List<CounselingReviewResponseDto> responseDtos = reviewService.getReviewsByStudentNo(studentNo);
         return ResponseEntity.ok(responseDtos);
     }
 
     // 특정 상담에 대한 모든 리뷰 조회
     @GetMapping("/counseling/{reqNo}")
-    public ResponseEntity<List<CounselingReviewResponseDto>> getReviewsByCounselingId(@PathVariable long reqNo) {
-        List<CounselingReviewResponseDto> responseDtos = reviewService.getReviewsByCounselingId(reqNo);
+    public ResponseEntity<List<CounselingReviewResponseDto>> getReviewsByCounselingNo(@PathVariable long reqNo) {
+        List<CounselingReviewResponseDto> responseDtos = reviewService.getReviewsByCounselingNo(reqNo);
         return ResponseEntity.ok(responseDtos);
     }
 }

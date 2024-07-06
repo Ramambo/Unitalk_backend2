@@ -34,8 +34,8 @@ public class CounselorScheduleService {
     // 상담사의 스케쥴 등록
     @Transactional
     public CounselorScheduleResponseDto registerSchedule(CounselorScheduleRequestDto requestDto) {
-        Employee counselor = employeeRepository.findById(requestDto.getCounselorId())
-                .orElseThrow(() -> new RuntimeException("Counselor not found with ID: " + requestDto.getCounselorId()));
+        Employee counselor = employeeRepository.findById(requestDto.getCounselorNo())
+                .orElseThrow(() -> new RuntimeException("Counselor not found with ID: " + requestDto.getCounselorNo()));
 
         CounselorSchedule schedule = modelMapper.map(requestDto, CounselorSchedule.class);
         schedule.setCounselor(counselor);
@@ -46,8 +46,8 @@ public class CounselorScheduleService {
     }
 
     // 상담사ID로 해당 상담사의 모든 스케쥴 조회
-    public List<CounselorScheduleResponseDto> getSchedulesByCounselorId(long counselorId) {
-        Employee counselor = employeeRepository.findById(counselorId)
+    public List<CounselorScheduleResponseDto> getSchedulesByCounselorNo(long counselorNo) {
+        Employee counselor = employeeRepository.findById(counselorNo)
                 .orElseThrow(() -> new RuntimeException("Counselor not found"));
         List<CounselorSchedule> schedules = scheduleRepository.findByCounselor(counselor);
         return schedules.stream()
@@ -69,8 +69,8 @@ public class CounselorScheduleService {
 
         modelMapper.map(requestDto, existingSchedule);
 
-        if (!existingSchedule.getCounselor().getEmpId().equals(requestDto.getCounselorId())) {
-            Employee newCounselor = employeeRepository.findById(requestDto.getCounselorId())
+        if (!existingSchedule.getCounselor().getEmployeeNo().equals(requestDto.getCounselorNo())) {
+            Employee newCounselor = employeeRepository.findById(requestDto.getCounselorNo())
                     .orElseThrow(() -> new RuntimeException("Counselor not found"));
             existingSchedule.setCounselor(newCounselor);
         }

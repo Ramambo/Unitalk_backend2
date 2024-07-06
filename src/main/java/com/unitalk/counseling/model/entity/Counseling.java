@@ -1,5 +1,8 @@
 package com.unitalk.counseling.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.unitalk.common.model.entity.Department;
 import com.unitalk.common.model.entity.Employee;
 import com.unitalk.common.model.entity.Student;
 import jakarta.persistence.*;
@@ -19,46 +22,55 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reqNo")
 public class Counseling {
 
     @Id
+    @Column(name = "req_no")    // 상담신청번호
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reqNo;  // 상담신청번호
+    private Long reqNo;
 
     @ManyToOne
-    @JoinColumn(name = "studentId")
-    private Student student;  // 학생ID
+    @JoinColumn(name = "student_no", nullable = false)  // 학생일련번호
+    private Student student;
 
     @ManyToOne
-    @JoinColumn(name = "counselorId")
-    private Employee counselorId;    // 상담사ID
+    @JoinColumn(name = "counselor_no", nullable = false)    // 상담사일련번호
+    private Employee counselor;    // 상담사ID
 
-    private LocalDate counselDate;  // 상담일(학생이 선택한 날짜)
-    
     @ManyToOne
-    @JoinColumn(name = "schNo")
-    private CounselorSchedule schedule; // 학생이 선택한 시간
+    @JoinColumn(name = "sch_no")
+    private CounselorSchedule schedule; // 시간표번호
+
+    @Column(name = "counsel_date", nullable = false)    // 상담일
+    private LocalDate counselDate;
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime applicationDate;  // 신청일시
+    @Column(name ="application_date", nullable = false, updatable = false)  // 신청일시
+    private LocalDateTime applicationDate;
 
-    private Long counselMode;   // 대면1|비대면2
-
-    @Column(nullable = false)
-    private String counselType; // 상담분야
-
-    private String applicationContent; // 신청내용
-
-    private Long status;    // 진행상태
-
-    private String counselContent;  // 상담기록(상담사가 작성함)
-
-    @LastModifiedDate
-    private LocalDateTime recordTime;   // 상담기록을 작성한 시각
+    @Column(name = "counsel_mode", nullable = false)    // 대면1 | 비대면2
+    private Long counselMode;
 
     @ManyToOne
-    @JoinColumn(name = "previousReqNo")
-    private Counseling previousReqCounseling;   // 이전상담번호
+    @JoinColumn(name = "counsel_type", nullable = false) // 상담분야
+    private Department department;
+
+    @Column(name = "application_content")   // 신청내용
+    private String applicationContent;
+
+    @Column(name = "status", nullable = false)  // 진행상태
+    private Long status;
+
+    @Column(name = "counsel_content")   // 상담기록(상담사가 작성함)
+    private String counselContent;
+
+    @LastModifiedDate
+    @Column(name = "record_time")   // 상담기록을 작성한 시각
+    private LocalDateTime recordTime;
+
+    @ManyToOne
+    @JoinColumn(name = "previous_req_no")   // 이전상담번호
+    private Counseling previousReqCounseling;
 
 }

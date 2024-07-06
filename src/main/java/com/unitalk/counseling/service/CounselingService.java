@@ -1,5 +1,6 @@
 package com.unitalk.counseling.service;
 
+import com.unitalk.counseling.model.dto.CounselingCountsDto;
 import com.unitalk.counseling.model.dto.request.CounselingRequestDto;
 import com.unitalk.counseling.model.dto.response.CounselingResponseDto;
 import com.unitalk.counseling.model.entity.Counseling;
@@ -15,7 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -42,14 +45,14 @@ public class CounselingService {
     // 상담 신청
     @Transactional
     public CounselingResponseDto createCounseling(CounselingRequestDto requestDto) {
-        Student student = studentRepository.findById(requestDto.getStudentId())
+        Student student = studentRepository.findById(requestDto.getStudentNo())
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-        Employee counselor = employeeRepository.findById(requestDto.getCounselorId())
+        Employee counselor = employeeRepository.findById(requestDto.getCounselorNo())
                 .orElseThrow(() -> new RuntimeException("Counselor not found"));
 
         Counseling counseling = modelMapper.map(requestDto, Counseling.class);
         counseling.setStudent(student);
-        counseling.setCounselorId(counselor);
+        counseling.setCounselor(counselor);
         counseling.setSchedule(scheduleRepository.findById(requestDto.getSchNo())
                 .orElseThrow(() -> new RuntimeException("Schedule not found")));
         counseling.setStatus(2L);
@@ -80,18 +83,52 @@ public class CounselingService {
     }
 
     // 학생ID로 해당 학생의 모든 상담 정보 조회
-    public Page<CounselingResponseDto> getCounselingsByStudentId(Long studentId, Pageable pageable) {
-        Student student = studentRepository.findById(studentId)
+    public Page<CounselingResponseDto> getCounselingsByStudentNo(Long studentNo, Pageable pageable) {
+        Student student = studentRepository.findById(studentNo)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
         Page<Counseling> counselings = counselingRepository.findByStudentOrderByApplicationDateDesc(student, pageable);
         return counselings.map(counseling -> modelMapper.map(counseling, CounselingResponseDto.class));
     }
 
     // 상담자ID로 해당 상담사의 모든 상담 정보 조회
-    public Page<CounselingResponseDto> getCounselingsByCounselorId(Long counselorId, Pageable pageable) {
-        Employee counselor = employeeRepository.findById(counselorId)
+    public Page<CounselingResponseDto> getCounselingsByCounselorNo(Long counselorNo, Pageable pageable) {
+        Employee counselor = employeeRepository.findById(counselorNo)
                 .orElseThrow(() -> new RuntimeException("Counselor not found"));
-        Page<Counseling> counselings = counselingRepository.findByCounselorIdOrderByApplicationDateDesc(counselor, pageable);
+        Page<Counseling> counselings = counselingRepository.findByCounselorOrderByApplicationDateDesc(counselor, pageable);
+        return counselings.map(counseling -> modelMapper.map(counseling, CounselingResponseDto.class));
+    }
+
+    public CounselingCountsDto getCounselingCountsByStudentNo(Long studentNo) {
+        List<Counseling> counselings = counselingRepository.findByStudent_StudentNo(studentNo);
+        CounselingCountsDto counts = new CounselingCountsDto();
+
+        for (Counseling counseling : counselings) {
+            String counselType = counseling.getDepartment().getDeptId();
+            switch (counselType) {
+                case "PROF":
+                    counts.setProfessorCounseling(counts.getProfessorCounseling() + 1);
+                    break;
+                case "PERS":
+                    counts.setPersonalCounseling(counts.getPersonalCounseling() + 1);
+                    break;
+                case "SEXH":
+                    counts.setSexualHarassmentCounseling(counts.getSexualHarassmentCounseling() + 1);
+                    break;
+                case "WELF":
+                    counts.setStudentWelfareCounseling(counts.getStudentWelfareCounseling() + 1);
+                    break;
+            }
+        }
+        return counts;
+    }
+
+    public Page<CounselingResponseDto> getCounselingsByStudentNoWithFilters(
+            Long studentNo, Long counselMode, Long status, String counselType,
+            LocalDate startDate, LocalDate endDate, Pageable pageable) {
+
+        Page<Counseling> counselings = counselingRepository.findByFilters(
+                studentNo, counselMode, status, counselType, startDate, endDate, pageable);
+
         return counselings.map(counseling -> modelMapper.map(counseling, CounselingResponseDto.class));
     }
 }

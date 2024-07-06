@@ -27,9 +27,9 @@ public class CounselorScheduleController {
     }
 
     // 상담사의 모든 스케쥴 조회
-    @GetMapping("/{counselorId}")
-    public ResponseEntity<List<CounselorScheduleResponseDto>> getSchedulesByCounselorId(@PathVariable Integer counselorId) {
-        List<CounselorScheduleResponseDto> schedules = counselorScheduleService.getSchedulesByCounselorId(counselorId);
+    @GetMapping("/{counselorNo}")
+    public ResponseEntity<List<CounselorScheduleResponseDto>> getSchedulesByCounselorId(@PathVariable long counselorNo) {
+        List<CounselorScheduleResponseDto> schedules = counselorScheduleService.getSchedulesByCounselorNo(counselorNo);
         return ResponseEntity.ok(schedules);
     }
 

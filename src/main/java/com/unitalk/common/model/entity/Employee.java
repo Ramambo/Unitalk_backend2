@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -15,20 +15,18 @@ import java.sql.Timestamp;
 public class Employee {
 
     @Id
-    private Long empId;
+    @Column(name = "employee_no", nullable = false) // 교직원일련번호
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long employeeNo;
 
-    private Long loginNo;
+    @OneToOne
+    @JoinColumn(name = "employee_id", nullable = false) // 직원번호
+    private User user;
 
-    private String deptId;
+    @Column(name = "hire_date", nullable = false)   // 입사일
+    private LocalDate hireDate;
 
-    private String username;
-
-    private String email;
-
-    private String phoneNumber;
-
-    private Timestamp registrationYear;
-
+    @Column(name = "dept_detail")   // 교직원구분
     private String deptDetail;
 
 }
