@@ -10,19 +10,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CounselingResponse {
 
-    private Long reqNo;
-    private Long studentId;
-    private Long empId;
-    private Long schNo;
+    private Long reqNo; //상담 신청 번호 
+    private Long studentId; // 학생ID
+    private Long empId; // 상담사ID(교수)
+    private Long schNo; // 시간표 번호 
     //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime applicationDate;
-    private LocalDateTime recordTime;
-    private Long counselMode;
+    private LocalDateTime applicationDate; //신청일시
+    private LocalDateTime recordTime; // 신청시간코드
+    private Long counselMode; // 상담유형
     //private String counselType;
-    private String applicationContent;
-    private Long status;
-    private String counselContent;
-    private LocalDateTime counselDate;
+    private String applicationContent; //신청내용
+    private Long status; // 진행상태
+    private String counselContent; // 상담내용
+    private LocalDateTime counselDate; // 상담일시
     //private Counseling previousReqNo;
 
     public static CounselingResponse from(Counseling counseling) {

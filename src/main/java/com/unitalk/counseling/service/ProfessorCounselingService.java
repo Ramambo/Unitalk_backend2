@@ -55,14 +55,14 @@ public class ProfessorCounselingService {
 
         return list.map(CounselingResponse::from);
     }
-    /* 상담 날짜 조회 : 교수 ID로 */
+
+    /* 상담 가능 날짜 조회 : 교수 ID로 */
     @Transactional(readOnly = true)
-    public Page<CounselingScheduleResponseResponse> getByEmployeeId(final Integer page, final Long empId){
+    public Page<CounselingScheduleResponse> getByEmployeeId(final Integer page, final Long empId){
 
-        Page<CounselorSchedule> list = counselorScheduleRepository.findByEmployee_EmployeeId(getPageable(page), empId);
+        Page<CounselorSchedule> list = counselorScheduleRepository.findByEmpId(getPageable(page), empId);
 
-        return list.map(CounselingResponse::from);
-
+        return list.map(CounselingScheduleResponse::from);
     }
 
     /* 상세 조회 : pk로 1건 조회 */

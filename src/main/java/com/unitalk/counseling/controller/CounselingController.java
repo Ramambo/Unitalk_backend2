@@ -1,10 +1,13 @@
 package com.unitalk.counseling.controller;
 
+import com.unitalk.common.model.entity.Employee;
 import com.unitalk.common.util.paging.Pagenation;
 import com.unitalk.common.util.paging.PagingButtonInfo;
 import com.unitalk.common.util.paging.PagingResponse;
 import com.unitalk.counseling.dto.request.CounselingCreateRequest;
 import com.unitalk.counseling.dto.response.CounselingResponse;
+import com.unitalk.counseling.dto.response.CounselingScheduleResponse;
+import com.unitalk.counseling.model.entity.CounselorSchedule;
 import com.unitalk.counseling.service.ProfessorCounselingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,11 +36,23 @@ public class CounselingController {
         return ResponseEntity.ok(pagingResponse);
     }
 
-    /*  목록 조회. 페이징, 검색어 교수명 */
-    @GetMapping("/list/search")
+    /*  목록 조회. 페이징, 검색어 학생id */
+    @GetMapping("/list/search/student")
     public ResponseEntity<PagingResponse> getByUsername(
-            @RequestParam(defaultValue = "1") final Integer page, @RequestParam final Integer studentId) {
+            @RequestParam(defaultValue = "1") final Integer page, @RequestParam final Long studentId) {
         final Page<CounselingResponse> list = professorCounselingService.getByStudentId(page, studentId);
+        final PagingButtonInfo pagingButtonInfo = Pagenation.getPagingButtonInfo(list);
+        final PagingResponse pagingResponse = PagingResponse.of(list.getContent(), pagingButtonInfo);
+
+        return ResponseEntity.ok(pagingResponse);
+    }
+
+    /*  목록 조회. 페이징, 검색어 교수id로 교수가 상담 가능한 스케쥴을 찾기 */
+    @GetMapping("/list/search/professor")
+    public ResponseEntity<PagingResponse> getByEmpId(
+            @RequestParam(defaultValue = "1") final Integer page, @RequestParam Long empId) {
+
+        final Page<CounselingScheduleResponse> list = professorCounselingService.getByEmployeeId(page, empId);
         final PagingButtonInfo pagingButtonInfo = Pagenation.getPagingButtonInfo(list);
         final PagingResponse pagingResponse = PagingResponse.of(list.getContent(), pagingButtonInfo);
 
