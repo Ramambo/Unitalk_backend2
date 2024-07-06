@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -53,16 +54,20 @@ public class Program {
     private Long recruitNum;
 
     @Column(name = "status", nullable = false) // 상태
-    private Character status;
+    private String status;
 
     @Column(name = "view_cnt")
     @ColumnDefault("0") // 기본값 0
     private Long viewCnt; // 조회수
 
+    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProgramFile> programFiles; // 추가된 부분
+
+
     // 엔티티 필드 업데이트
     public void update(String programName, String programContent, LocalDate recruitStart, LocalDate recruitEnd,
                        LocalDate operationStart, LocalDate operationEnd, Long programSession,
-                       Long recruitNum, Character status, Long viewCnt) {
+                       Long recruitNum, String status, Long viewCnt) {
         this.programName = programName;
         this.programContent = programContent;
         this.recruitStart = recruitStart;
@@ -79,8 +84,8 @@ public class Program {
         this.counselor = counselor;
     }
 
-    public void setViewCnt(Long viewCnt) {
-        this.viewCnt = viewCnt;
+    public void viewCount() {
+        this.viewCnt++;
     }
 
     public ProgramResponseDto toDto() {

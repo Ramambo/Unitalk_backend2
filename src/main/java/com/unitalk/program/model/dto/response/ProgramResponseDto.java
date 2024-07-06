@@ -1,12 +1,14 @@
 package com.unitalk.program.model.dto.response;
 
 import com.unitalk.common.model.entity.Employee;
+import com.unitalk.program.model.dto.ProgramFileDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -23,6 +25,9 @@ public class ProgramResponseDto {
     private LocalDate operationEnd; // 운영종료일
     private Long programSession; // 회차
     private Long recruitNum; // 모집인원
-    private Character status; // 상태
+    private String status; // 상태
     private Long viewCnt; // 조회수
+
+    private ProgramFileDto thumbnailFile; //썸네일 파일
+    private List<ProgramFileDto> files; // 파일
 }

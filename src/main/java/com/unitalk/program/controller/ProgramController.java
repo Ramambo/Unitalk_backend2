@@ -1,7 +1,10 @@
 package com.unitalk.program.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.unitalk.program.model.dto.request.ProgramRequestDto;
 import com.unitalk.program.model.dto.response.ProgramResponseDto;
+import com.unitalk.program.service.ProgramFileService;
 import com.unitalk.program.service.ProgramService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +14,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -21,6 +27,7 @@ import java.time.LocalDate;
 public class ProgramController {
 
     private final ProgramService programService;
+    private final ProgramFileService programFileService;
 
     // 집단상담 목록 조회
     @GetMapping("/programs")
@@ -39,7 +46,7 @@ public class ProgramController {
             @RequestParam(required = false) LocalDate recruitEnd,
             @RequestParam(required = false) LocalDate operationStart,
             @RequestParam(required = false) LocalDate operationEnd,
-            @RequestParam(required = false) Character status,
+            @RequestParam(required = false) String status,
             @RequestParam(required = false) Long viewCnt,
             Pageable pageable) {
 
@@ -59,10 +66,17 @@ public class ProgramController {
     // 집단상담 작성
     @PostMapping("/program")
     public ResponseEntity<ProgramResponseDto> createProgram(
-            @Valid @RequestBody ProgramRequestDto requestDto,
-            @RequestHeader("employeeNo") Long creatorEmployeeNo) {
+            @Valid @ModelAttribute("program") String programJson,
+            @RequestPart("files") List<MultipartFile> files,
+            @RequestHeader("employeeNo") Long creatorEmployeeNo) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        ProgramRequestDto requestDto = objectMapper.readValue(programJson, ProgramRequestDto.class);
 
         ProgramResponseDto program = programService.createProgram(requestDto, creatorEmployeeNo);
+        programFileService.saveFiles(files, program.getProgramNo());
+
         return new ResponseEntity<>(program, HttpStatus.CREATED);
     }
 
@@ -70,10 +84,17 @@ public class ProgramController {
     @PutMapping("/program/{programNo}")
     public ResponseEntity<ProgramResponseDto> updateProgram(
             @PathVariable Long programNo,
-            @Valid @RequestBody ProgramRequestDto requestDto,
-            @RequestHeader("employeeNo") Long updaterEmployeeNo) {
+            @Valid @ModelAttribute("program") String programJson,
+            @RequestPart("files") List<MultipartFile> files,
+            @RequestHeader("employeeNo") Long updaterEmployeeNo) throws IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        ProgramRequestDto requestDto = objectMapper.readValue(programJson, ProgramRequestDto.class);
 
         ProgramResponseDto program = programService.updateProgram(programNo, requestDto, updaterEmployeeNo);
+        programFileService.saveFiles(files, program.getProgramNo());
+
         return new ResponseEntity<>(program, HttpStatus.OK);
     }
 

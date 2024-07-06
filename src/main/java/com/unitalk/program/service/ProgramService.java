@@ -2,9 +2,12 @@ package com.unitalk.program.service;
 
 import com.unitalk.common.model.entity.Employee;
 import com.unitalk.common.repository.EmployeeRepository;
+import com.unitalk.program.model.dto.ProgramFileDto;
 import com.unitalk.program.model.dto.request.ProgramRequestDto;
 import com.unitalk.program.model.dto.response.ProgramResponseDto;
 import com.unitalk.program.model.entity.Program;
+import com.unitalk.program.model.entity.ProgramFile;
+import com.unitalk.program.repository.ProgramFileRepository;
 import com.unitalk.program.repository.ProgramRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,11 +25,12 @@ public class ProgramService {
 
     private final ProgramRepository programRepository;
     private final EmployeeRepository employeeRepository;
+    private final ProgramFileRepository programFileRepository;
 
     // 집단상담 목록 조회
     public Page<ProgramResponseDto> getAllPrograms(Pageable pageable) {
         Page<Program> programs = programRepository.findAllByOrderByProgramNoDesc(pageable);
-        return programs.map(Program::toDto);
+        return programs.map(this::convertToDtoWithFiles);
     }
     /* Stream API 메서드: map(Program::toDto);
        Program의 toDto를 참조한다.
@@ -35,18 +40,23 @@ public class ProgramService {
     public Page<ProgramResponseDto> getProgramsByFilters(Long counselorNo, String programName, String programContent,
                                                          LocalDate recruitStart, LocalDate recruitEnd,
                                                          LocalDate operationStart, LocalDate operationEnd,
-                                                         Character status, Long viewCnt, Pageable pageable) {
+                                                         String status, Long viewCnt, Pageable pageable) {
 
         Page<Program> programs = programRepository.findByFilters(counselorNo, programName, programContent, recruitStart, recruitEnd,
                 operationStart, operationEnd, status, viewCnt, pageable);
-        return programs.map(Program::toDto);
+        return programs.map(this::convertToDtoWithFiles);
     }
 
     // 집단상담 조회
     public ProgramResponseDto getProgramById(Long programNo) {
         Program program = programRepository.findById(programNo)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다." + programNo));
-        return program.toDto();
+
+        // 조회수
+        program.viewCount();
+        programRepository.save(program);
+
+        return convertToDtoWithFiles(program);
     }
 
     // 집단상담 작성
@@ -124,6 +134,45 @@ public class ProgramService {
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 없습니다." + programNo));
 
         programRepository.delete(program);
+    }
+
+    private ProgramResponseDto convertToDtoWithFiles(Program program) {
+        List<ProgramFile> files = programFileRepository.findByProgram(program);
+        List<ProgramFileDto> fileDtos = files.stream()
+                .map(file -> ProgramFileDto.builder()
+                        .fileNo(file.getFileNo())
+                        .fileName(file.getFileName())
+                        .fileSaveName(file.getFileSaveName())
+                        .filePath(file.getFilePath())
+                        .fileSize(file.getFileSize())
+                        .build())
+                .toList();
+
+        ProgramFile thumbnailFile = programFileRepository.findFirstByProgramOrderByFileNoAsc(program);
+        ProgramFileDto thumbnailFileDto = thumbnailFile != null ? ProgramFileDto.builder()
+                .fileNo(thumbnailFile.getFileNo())
+                .fileName(thumbnailFile.getFileName())
+                .fileSaveName(thumbnailFile.getFileSaveName())
+                .filePath(thumbnailFile.getFilePath())
+                .fileSize(thumbnailFile.getFileSize())
+                .build() : null;
+
+        return ProgramResponseDto.builder()
+                .programNo(program.getProgramNo())
+                .counselor(program.getCounselor())
+                .programName(program.getProgramName())
+                .programContent(program.getProgramContent())
+                .recruitStart(program.getRecruitStart())
+                .recruitEnd(program.getRecruitEnd())
+                .operationStart(program.getOperationStart())
+                .operationEnd(program.getOperationEnd())
+                .programSession(program.getProgramSession())
+                .recruitNum(program.getRecruitNum())
+                .status(program.getStatus())
+                .viewCnt(program.getViewCnt())
+                .thumbnailFile(thumbnailFileDto)
+                .files(fileDtos)
+                .build();
     }
 
 }

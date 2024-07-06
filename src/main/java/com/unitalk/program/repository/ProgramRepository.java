@@ -31,7 +31,7 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             @Param("recruitEnd") LocalDate recruitEnd,
             @Param("operationStart") LocalDate operationStart,
             @Param("operationEnd") LocalDate operationEnd,
-            @Param("status") Character status,
+            @Param("status") String status,
             @Param("viewCnt") Long viewCnt,
             Pageable pageable
     );
