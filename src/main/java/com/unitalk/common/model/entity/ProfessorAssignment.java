@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,17 +15,19 @@ import java.sql.Timestamp;
 public class ProfessorAssignment {
 
     @Id
+    @Column(name = "assignment_id") // 배정일련번호
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long assignmentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "studentId")
-    private Student studentId;
+    @ManyToOne
+    @JoinColumn(name = "professor_no", nullable = false)    // 교수일련번호
+    private Employee professor;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "professorId")
-    private Employee professorId;
+    @Column(name = "assignment_date", nullable = false) // 배정일시
+    private LocalDateTime assignmentDate;
 
-    private Timestamp assignmentDate;
+    @ManyToOne
+    @JoinColumn(name = "student_no", nullable = false)  // 학생일련번호
+    private Student student;
 
 }
