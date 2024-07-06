@@ -32,4 +32,14 @@ public class Employee {
     @Column(name = "dept_detail")   // 교직원구분
     private String deptDetail;
 
+    // 교직원 구분이 "교직원" 확인
+    public boolean isStaff() {
+        return "교직원".equals(deptDetail);
+    }
+
+    // 상담사 구분 확인 메서드
+    public boolean isCounselor() {
+        return "상담사".equals(deptDetail);
+    }
+
 }

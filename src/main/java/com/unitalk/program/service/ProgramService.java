@@ -51,11 +51,22 @@ public class ProgramService {
 
     // 집단상담 작성
     @Transactional
-    public ProgramResponseDto createProgram(ProgramRequestDto requestDto) {
+    public ProgramResponseDto createProgram(ProgramRequestDto requestDto, Long creatorEmployeeNo) {
+        // 프로그램 입력 요청자의 정보 조회 (교직원만 가능)
+        Employee creator = employeeRepository.findById(creatorEmployeeNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + creatorEmployeeNo));
+
+        if (!creator.isStaff()) {
+            throw new IllegalArgumentException("교직원만 프로그램을 입력할 수 있습니다.");
+        }
 
         // 상담사 정보 조회
         Employee counselor = employeeRepository.findById(requestDto.getCounselorNo())
-                    .orElseThrow(() -> new EntityNotFoundException("해당 상담사 정보가 없습니다." + requestDto.getCounselorNo()));
+                .orElseThrow(() -> new EntityNotFoundException("해당 상담사 정보가 없습니다." + requestDto.getCounselorNo()));
+
+        if (!counselor.isCounselor()) {
+            throw new IllegalArgumentException("상담사만 상담사로 지정할 수 있습니다.");
+        }
 
         Program program = Program.builder()
                 .counselor(counselor)
@@ -77,13 +88,25 @@ public class ProgramService {
 
     // 집단상담 수정
     @Transactional
-    public ProgramResponseDto updateProgram(Long programNo, ProgramRequestDto requestDto) {
+    public ProgramResponseDto updateProgram(Long programNo, ProgramRequestDto requestDto, Long updaterEmployeeNo) {
         Program program = programRepository.findById(programNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 없습니다." + programNo));
 
-        // 상담사 정보 조회(상담사는 수정 안함)
+        // 프로그램 수정 요청자의 정보 조회 (교직원만 가능)
+        Employee updater = employeeRepository.findById(updaterEmployeeNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + updaterEmployeeNo));
+
+        if (!updater.isStaff()) {
+            throw new IllegalArgumentException("교직원만 프로그램을 수정할 수 있습니다.");
+        }
+
+        // 상담사 정보 조회
         Employee counselor = employeeRepository.findById(requestDto.getCounselorNo())
                 .orElseThrow(() -> new EntityNotFoundException("해당 상담사 정보가 없습니다." + requestDto.getCounselorNo()));
+
+        if (!counselor.isCounselor()) {
+            throw new IllegalArgumentException("상담사만 상담사로 지정할 수 있습니다.");
+        }
 
         program.update(requestDto.getProgramName(), requestDto.getProgramContent(),
                 requestDto.getRecruitStart(), requestDto.getRecruitEnd(),
@@ -99,6 +122,7 @@ public class ProgramService {
     public void deleteProgram(Long programNo) {
         Program program = programRepository.findById(programNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 없습니다." + programNo));
+
         programRepository.delete(program);
     }
 

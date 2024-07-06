@@ -58,8 +58,11 @@ public class ProgramController {
 
     // 집단상담 작성
     @PostMapping("/program")
-    public ResponseEntity<ProgramResponseDto> createProgram(@Valid @RequestBody ProgramRequestDto requestDto) {
-        ProgramResponseDto program = programService.createProgram(requestDto);
+    public ResponseEntity<ProgramResponseDto> createProgram(
+            @Valid @RequestBody ProgramRequestDto requestDto,
+            @RequestHeader("employeeNo") Long creatorEmployeeNo) {
+
+        ProgramResponseDto program = programService.createProgram(requestDto, creatorEmployeeNo);
         return new ResponseEntity<>(program, HttpStatus.CREATED);
     }
 
@@ -67,9 +70,10 @@ public class ProgramController {
     @PutMapping("/program/{programNo}")
     public ResponseEntity<ProgramResponseDto> updateProgram(
             @PathVariable Long programNo,
-            @Valid @RequestBody ProgramRequestDto requestDto) {
+            @Valid @RequestBody ProgramRequestDto requestDto,
+            @RequestHeader("employeeNo") Long updaterEmployeeNo) {
 
-        ProgramResponseDto program = programService.updateProgram(programNo, requestDto);
+        ProgramResponseDto program = programService.updateProgram(programNo, requestDto, updaterEmployeeNo);
         return new ResponseEntity<>(program, HttpStatus.OK);
     }
 
