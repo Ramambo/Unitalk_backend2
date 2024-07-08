@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,9 @@ public class ProgramController {
 
     // 집단상담 목록 조회
     @GetMapping("/programs")
-    public ResponseEntity<Page<ProgramResponseDto>> getAllPrograms(Pageable pageable) {
+    public ResponseEntity<Page<ProgramResponseDto>> getAllPrograms(@RequestParam(defaultValue = "0") int page,
+                                                                   @RequestParam(defaultValue = "16") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         Page<ProgramResponseDto> programs = programService.getAllPrograms(pageable);
         return new ResponseEntity<>(programs, HttpStatus.OK);
     }
@@ -46,7 +49,7 @@ public class ProgramController {
             @RequestParam(required = false) LocalDate recruitEnd,
             @RequestParam(required = false) LocalDate operationStart,
             @RequestParam(required = false) LocalDate operationEnd,
-            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Long status,
             @RequestParam(required = false) Long viewCnt,
             Pageable pageable) {
 

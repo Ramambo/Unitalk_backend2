@@ -25,6 +25,6 @@ public class ProgramRequestDto {
     private LocalDate operationEnd; // 운영종료일
     private Long programSession; // 회차
     private Long recruitNum; // 모집인원
-    private String status; // 상태
+    private Long status; // 상태
     private Long viewCnt; // 조회수
 }

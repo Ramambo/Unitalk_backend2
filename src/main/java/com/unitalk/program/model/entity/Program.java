@@ -54,20 +54,20 @@ public class Program {
     private Long recruitNum;
 
     @Column(name = "status", nullable = false) // 상태
-    private String status;
+    private Long status; // 1: 신청가능, 2: 신청불가
 
     @Column(name = "view_cnt")
     @ColumnDefault("0") // 기본값 0
     private Long viewCnt; // 조회수
 
-    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ProgramFile> programFiles; // 추가된 부분
 
 
     // 엔티티 필드 업데이트
     public void update(String programName, String programContent, LocalDate recruitStart, LocalDate recruitEnd,
                        LocalDate operationStart, LocalDate operationEnd, Long programSession,
-                       Long recruitNum, String status, Long viewCnt) {
+                       Long recruitNum, Long status, Long viewCnt) {
         this.programName = programName;
         this.programContent = programContent;
         this.recruitStart = recruitStart;

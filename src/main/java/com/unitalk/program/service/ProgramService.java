@@ -30,7 +30,7 @@ public class ProgramService {
     // 집단상담 목록 조회
     public Page<ProgramResponseDto> getAllPrograms(Pageable pageable) {
         Page<Program> programs = programRepository.findAllByOrderByProgramNoDesc(pageable);
-        return programs.map(this::convertToDtoWithFiles);
+        return programs.map(this::ProgramDto);
     }
     /* Stream API 메서드: map(Program::toDto);
        Program의 toDto를 참조한다.
@@ -38,13 +38,14 @@ public class ProgramService {
 
     // 집단상담 필터 및 검색
     public Page<ProgramResponseDto> getProgramsByFilters(Long counselorNo, String programName, String programContent,
-                                                         LocalDate recruitStart, LocalDate recruitEnd,
-                                                         LocalDate operationStart, LocalDate operationEnd,
-                                                         String status, Long viewCnt, Pageable pageable) {
+                                                            LocalDate recruitStart, LocalDate recruitEnd,
+                                                            LocalDate operationStart, LocalDate operationEnd,
+                                                            Long status, Long viewCnt, Pageable pageable) {
 
-        Page<Program> programs = programRepository.findByFilters(counselorNo, programName, programContent, recruitStart, recruitEnd,
-                operationStart, operationEnd, status, viewCnt, pageable);
-        return programs.map(this::convertToDtoWithFiles);
+        Page<Program> programs = programRepository.findByFilters(counselorNo, programName, programContent,
+                                                                    recruitStart, recruitEnd,
+                                                                    operationStart, operationEnd, status, viewCnt, pageable);
+        return programs.map(this::ProgramDto);
     }
 
     // 집단상담 조회
@@ -56,17 +57,17 @@ public class ProgramService {
         program.viewCount();
         programRepository.save(program);
 
-        return convertToDtoWithFiles(program);
+        return ProgramDto(program);
     }
 
     // 집단상담 작성
     @Transactional
-    public ProgramResponseDto createProgram(ProgramRequestDto requestDto, Long creatorEmployeeNo) {
+    public ProgramResponseDto createProgram(ProgramRequestDto requestDto, Long employeeNo) {
         // 프로그램 입력 요청자의 정보 조회 (교직원만 가능)
-        Employee creator = employeeRepository.findById(creatorEmployeeNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + creatorEmployeeNo));
+        Employee employee = employeeRepository.findById(employeeNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + employeeNo));
 
-        if (!creator.isStaff()) {
+        if (!employee.isStaff()) {
             throw new IllegalArgumentException("교직원만 프로그램을 입력할 수 있습니다.");
         }
 
@@ -98,15 +99,15 @@ public class ProgramService {
 
     // 집단상담 수정
     @Transactional
-    public ProgramResponseDto updateProgram(Long programNo, ProgramRequestDto requestDto, Long updaterEmployeeNo) {
+    public ProgramResponseDto updateProgram(Long programNo, ProgramRequestDto requestDto, Long employeeNo) {
         Program program = programRepository.findById(programNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 없습니다." + programNo));
 
         // 프로그램 수정 요청자의 정보 조회 (교직원만 가능)
-        Employee updater = employeeRepository.findById(updaterEmployeeNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + updaterEmployeeNo));
+        Employee employee = employeeRepository.findById(employeeNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + employeeNo));
 
-        if (!updater.isStaff()) {
+        if (!employee.isStaff()) {
             throw new IllegalArgumentException("교직원만 프로그램을 수정할 수 있습니다.");
         }
 
@@ -136,7 +137,7 @@ public class ProgramService {
         programRepository.delete(program);
     }
 
-    private ProgramResponseDto convertToDtoWithFiles(Program program) {
+    private ProgramResponseDto ProgramDto(Program program) {
         List<ProgramFile> files = programFileRepository.findByProgram(program);
         List<ProgramFileDto> fileDtos = files.stream()
                 .map(file -> ProgramFileDto.builder()

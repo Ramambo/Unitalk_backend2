@@ -16,7 +16,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "studentNo")
 public class Student {
-
     @Id
     @Column(name = "student_no")    // 학생일련번호
     @GeneratedValue(strategy = GenerationType.IDENTITY)
