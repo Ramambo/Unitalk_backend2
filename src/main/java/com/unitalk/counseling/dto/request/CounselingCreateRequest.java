@@ -9,14 +9,13 @@ import lombok.ToString;
 @Getter @Setter
 @ToString
 public class CounselingCreateRequest {
-    private Long empId;
-    private Long studentId;
+    private Long employeeNo;
+    private Long studentNo;
     private Long schNo;
     private Long counselMode;
     private String applicationContent;
     private String status;
     private String counselContent;
     private String counselDate;
-
 
 }

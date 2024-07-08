@@ -49,20 +49,11 @@ public class ProfessorCounselingService {
 
     /* 목록 조회 : 학생번호 검색, 페이징*/
     @Transactional(readOnly = true)
-    public Page<CounselingResponse> getByStudentId(final Integer page, final Long studentId) {
+    public Page<CounselingResponse> getByStudentNo(final Integer page, final Long studentNo) {
 
-        Page<Counseling> list = counselingRepository.findByStudent_studentId(getPageable(page), studentId);
+        Page<Counseling> list = counselingRepository.findByStudent_studentNo(getPageable(page), studentNo);
 
         return list.map(CounselingResponse::from);
-    }
-
-    /* 상담 가능 날짜 조회 : 교수 ID로 */
-    @Transactional(readOnly = true)
-    public Page<CounselingScheduleResponse> getByEmployeeId(final Integer page, final Long empId){
-
-        Page<CounselorSchedule> list = counselorScheduleRepository.findByEmpId(getPageable(page), empId);
-
-        return list.map(CounselingScheduleResponse::from);
     }
 
     /* 상세 조회 : pk로 1건 조회 */
@@ -78,10 +69,10 @@ public class ProfessorCounselingService {
 
         Counseling newCounseling = modelMapper.map(counselingCreateRequest, Counseling.class);
 
-        Student student = studentRepository.findById(counselingCreateRequest.getStudentId())
+        Student student = studentRepository.findById(counselingCreateRequest.getStudentNo())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NO_DATA));
 
-        Employee employee = employeeRepository.findById(counselingCreateRequest.getEmpId())
+        Employee employee = employeeRepository.findById(counselingCreateRequest.getEmployeeNo())
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NO_DATA));
 
         CounselorSchedule counselorSchedule = counselorScheduleRepository.findById(counselingCreateRequest.getSchNo())

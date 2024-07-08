@@ -14,7 +14,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@Table(name = "Counseling_Reviews")
+@Table(name = "counseling_reviews")
 @NoArgsConstructor(access = PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
@@ -25,14 +25,14 @@ public class CounselingReview {
     private Long reviewNo; // 상담후기 일련번호
 
     @ManyToOne
-    @JoinColumn(name = "studentId")
-    private Student studentId; // 학생 ID
+    @JoinColumn(name = "student_id")
+    private Student student; // 학생 ID
 
     @ManyToOne
-    @JoinColumn(name = "reqNo")
-    private Counseling reqNo; // 상담신청번호
+    @JoinColumn(name = "req_no")
+    private Counseling counseling; // 상담신청번호
 
-    private BigDecimal rating; // 별점
+    private Long rating; // 별점
 
     private String content; // 내용
 

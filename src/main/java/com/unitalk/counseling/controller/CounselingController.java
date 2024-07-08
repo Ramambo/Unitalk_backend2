@@ -7,7 +7,7 @@ import com.unitalk.common.util.paging.PagingResponse;
 import com.unitalk.counseling.dto.request.CounselingCreateRequest;
 import com.unitalk.counseling.dto.response.CounselingResponse;
 import com.unitalk.counseling.dto.response.CounselingScheduleResponse;
-import com.unitalk.counseling.model.entity.CounselorSchedule;
+import com.unitalk.counseling.service.CounselorScheduleService;
 import com.unitalk.counseling.service.ProfessorCounselingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +24,7 @@ import java.net.URI;
 public class CounselingController {
 
     private final ProfessorCounselingService professorCounselingService;
+    private final CounselorScheduleService counselorScheduleService;
 
     /* 목록 조회, 페이징 */
     @GetMapping("/list")
@@ -39,8 +40,8 @@ public class CounselingController {
     /*  목록 조회. 페이징, 검색어 학생id */
     @GetMapping("/list/search/student")
     public ResponseEntity<PagingResponse> getByUsername(
-            @RequestParam(defaultValue = "1") final Integer page, @RequestParam final Long studentId) {
-        final Page<CounselingResponse> list = professorCounselingService.getByStudentId(page, studentId);
+            @RequestParam(defaultValue = "1") final Integer page, @RequestParam final Long studentNo) {
+        final Page<CounselingResponse> list = professorCounselingService.getByStudentNo(page, studentNo);
         final PagingButtonInfo pagingButtonInfo = Pagenation.getPagingButtonInfo(list);
         final PagingResponse pagingResponse = PagingResponse.of(list.getContent(), pagingButtonInfo);
 
@@ -49,10 +50,10 @@ public class CounselingController {
 
     /*  목록 조회. 페이징, 검색어 교수id로 교수가 상담 가능한 스케쥴을 찾기 */
     @GetMapping("/list/search/professor")
-    public ResponseEntity<PagingResponse> getByEmpId(
-            @RequestParam(defaultValue = "1") final Integer page, @RequestParam Long empId) {
+    public ResponseEntity<PagingResponse> getByEmployeeNo(
+            @RequestParam(defaultValue = "1") final Integer page, @RequestParam Long employeeNo) {
 
-        final Page<CounselingScheduleResponse> list = professorCounselingService.getByEmployeeId(page, empId);
+        final Page<CounselingScheduleResponse> list = counselorScheduleService.getByEmployeeNo(page, employeeNo);
         final PagingButtonInfo pagingButtonInfo = Pagenation.getPagingButtonInfo(list);
         final PagingResponse pagingResponse = PagingResponse.of(list.getContent(), pagingButtonInfo);
 

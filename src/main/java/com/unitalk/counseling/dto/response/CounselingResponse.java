@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 public class CounselingResponse {
 
     private Long reqNo; //상담 신청 번호 
-    private Long studentId; // 학생ID
-    private Long empId; // 상담사ID(교수)
-    private Long schNo; // 시간표 번호 
+    private Long studentNo; // 학생ID
+    private Long employeeNo; // 상담사ID(교수)
+    private Long schNo; // 시간표 번호
     //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime applicationDate; //신청일시
     private LocalDateTime recordTime; // 신청시간코드
@@ -28,9 +28,9 @@ public class CounselingResponse {
     public static CounselingResponse from(Counseling counseling) {
         return new CounselingResponse(
                 counseling.getReqNo(),
-                counseling.getEmployee().getEmpId(),
+                counseling.getEmployee().getEmployeeNo(),
                 counseling.getCounselorSchedule().getSchNo(),
-                counseling.getStudent().getStudentId(),
+                counseling.getStudent().getStudentNo(),
                 counseling.getApplicationDate(),
                 counseling.getRecordTime(),
                 counseling.getCounselMode(),

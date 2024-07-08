@@ -20,8 +20,8 @@ public class CounselorSchedule {
     private Long schNo;
 
     @ManyToOne
-    @JoinColumn(name = "empId")
-    private Employee empId;
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 
     private String days; // 요일
 

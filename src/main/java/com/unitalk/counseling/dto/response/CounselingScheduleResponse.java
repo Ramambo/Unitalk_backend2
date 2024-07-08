@@ -10,7 +10,7 @@ import lombok.Getter;
 public class CounselingScheduleResponse {
 
     private Long schNo; // 시간표 번호
-    private Employee empId; // 교직원 ID
+    private Long employeeNo; // 교직원 ID
     private String days; // 상담요일
     private Long availTime; // 시간코드
     private Long status; // 상태 (활성화1 / 비활성화 2)
@@ -18,7 +18,7 @@ public class CounselingScheduleResponse {
     public static CounselingScheduleResponse from(CounselorSchedule counselorSchedule){
         return new CounselingScheduleResponse(
                 counselorSchedule.getSchNo(),
-                counselorSchedule.getEmpId(),
+                counselorSchedule.getEmployee().getEmployeeNo(),
                 counselorSchedule.getDays(),
                 counselorSchedule.getAvailTime(),
                 counselorSchedule.getStatus()

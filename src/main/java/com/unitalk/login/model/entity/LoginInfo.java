@@ -1,28 +1,31 @@
 package com.unitalk.login.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.unitalk.common.model.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
-@Builder
-@Table(name = "LoginInfo")
+@Table(name = "Login_Info")
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "loginNo")
 public class LoginInfo {
+
     @Id
+    @Column(name = "login_no")  // 일련번호
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer userNo; //로그인 번호(PK)
+    private Long loginNo;
 
-    @Column(unique = true, nullable = false)
-    private Integer userId; //사용자 ID, 학번 및 교번
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true, nullable = false) // 사용자ID
+    private User user;
 
-    @Column(nullable = false)
-    private String password; //사용자 암호
+    @Column(name = "pwd", nullable = false) // 비밀번호
+    private String pwd;
 
-    @Column(nullable = false)
-    private Integer userType; //사용자 구분
 }

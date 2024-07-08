@@ -28,7 +28,7 @@ public class Counseling {
     private Long reqNo; // 상담신청번호
 
     @ManyToOne
-    @JoinColumn(name = "studentId")
+    @JoinColumn(name = "student_no")
     private Student student; //학생ID
 
     @ManyToOne
@@ -52,7 +52,7 @@ public class Counseling {
     private long status; // 상담 진행 상태 (1 : 대기, 2 : 승인, 3 : 완료, 8: 불참, 9 : 취소)
 
     private String counselContent; // 상담기록(상담사가 작성)
-    
+
     private LocalDateTime recordTime; // 상담기록을 작성한 시각
 
     private LocalDateTime counselDate; // 상담일(학생이 선택한 날짜)
