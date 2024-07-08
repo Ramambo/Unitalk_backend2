@@ -4,50 +4,37 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "Employees")
 @Getter
+@Setter
 @NoArgsConstructor
 //교직원정보 Entity
 public class Employee {
 
     @Id
-    @Column(name = "employee_id", nullable = false)
-    private Long employeeId; //교직원 ID(직번)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "employee_no", nullable = false)
+    private Long employeeNo; //교직원 일련번호, PK
 
-    @Column(name = "dept_id", nullable = false)
-    private String deptId; //부서코드(부서/학과)
-
-    @Column(name = "login_no", nullable = false)
-    private Long loginNo; //로그인일련번호
-
-    @Column(name = "employee_name", nullable = false)
-    private String employeeName; //교직원 이름
-
-    @Column(name = "employee_email", nullable = false)
-    private String employeeEmail; //교직원 이메일
-
-    @Column(name = "employee_phone_number", nullable = false)
-    private String employeePhoneNumber; //교직원 전화번호
+    @OneToOne
+    @JoinColumn(name = "employee_id", unique = true, nullable = false, referencedColumnName = "user_id")
+    private User user; //교직원 ID(직번)
     
-    @Column(name = "employee_registration_year", nullable = false)
-    private LocalDate employeeRegistrationYear; //입사연월일
+    @Column(name = "hire_date", nullable = false)
+    private LocalDate hireDate; //입사연월일
 
     @Column(name = "dept_detail", nullable = false)
     private String deptDetail; //교직원구분
 
     @Builder
-    private Employee(Long employeeId, String deptId, Long loginNo, String employeeName, String employeeEmail, String employeePhoneNumber, LocalDate employeeRegistrationYear, String deptDetail) {
-        this.employeeId = employeeId;
-        this.deptId = deptId;
-        this.loginNo = loginNo;
-        this.employeeName = employeeName;
-        this.employeeEmail = employeeEmail;
-        this.employeePhoneNumber = employeePhoneNumber;
-        this.employeeRegistrationYear = employeeRegistrationYear;
+    private Employee(User user, LocalDate hireDate, String deptDetail) {
+        this.user = user;
+        this.hireDate = hireDate;
         this.deptDetail = deptDetail;
     }
 

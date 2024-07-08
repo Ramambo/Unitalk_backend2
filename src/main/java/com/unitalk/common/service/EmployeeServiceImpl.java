@@ -1,6 +1,7 @@
 package com.unitalk.common.service;
 
 import com.unitalk.common.model.entity.Employee;
+import com.unitalk.common.model.entity.User;
 import com.unitalk.emp.model.dto.ProfessorListItem;
 import com.unitalk.common.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         // Employee 엔티티를 ProfessorListItem DTO로 변환합니다.
         List<ProfessorListItem> professors = employees.stream()
-                .map(employee -> new ProfessorListItem(
-                        employee.getEmployeeId(),
-                        employee.getDeptId(),
-                        employee.getEmployeeName(),
-                        employee.getEmployeeEmail(),
-                        employee.getEmployeePhoneNumber()
-                ))
+                .map(employee -> {
+                    User professorUser = employee.getUser(); //Employee Entity의 employeeId는 User Entity를 참조
+                    String professorDeptId = professorUser.getDeptId().getDeptName();
+
+                    return new ProfessorListItem(
+                            professorUser.getUserId(),
+                            professorDeptId,
+                            professorUser.getUserName(),
+                            professorUser.getEmail(),
+                            professorUser.getTel()
+                    );
+                })
                 .collect(Collectors.toList());
 
         return professors;

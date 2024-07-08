@@ -19,17 +19,19 @@ public class ProfessorAssignment {
     @Column(name = "assignment_id", nullable = false)
     private Long assignmentId; //지도교수 배정 이력 일련번호, PK
 
-    @Column(name = "professor_id", nullable = false)
-    private Long professorId; //교수 ID, FK
+    @ManyToOne
+    @JoinColumn(name = "professor_id", nullable = false, referencedColumnName = "employee_no")
+    private Employee professorId; //교수 ID, FK
 
-    @Column(name = "student_id", nullable = false)
-    private Long studentId; //학생 ID, FK
+    @ManyToOne
+    @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "student_no")
+    private Student studentId; //학생 ID, FK
 
     @Column(name = "assignment_date", nullable = false)
     private LocalDateTime assignmentDate; //지도교수 배정 일시
 
     @Builder
-    public ProfessorAssignment(Long professorId, Long studentId) {
+    public ProfessorAssignment(Employee professorId, Student studentId) {
         this.professorId = professorId;
         this.studentId = studentId;
     }

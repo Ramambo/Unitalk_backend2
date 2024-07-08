@@ -3,6 +3,7 @@ package com.unitalk.emp.service;
 import com.unitalk.common.model.entity.Employee;
 import com.unitalk.common.model.entity.ProfessorAssignment;
 import com.unitalk.common.model.entity.Student;
+import com.unitalk.common.model.entity.User;
 import com.unitalk.common.repository.EmployeeRepository;
 import com.unitalk.common.repository.StudentRepository;
 import com.unitalk.emp.model.dto.ProfessorAssignmentListItem;
@@ -20,33 +21,43 @@ public class ProfessorAssignmentServiceImpl implements ProfessorAssignmentServic
 
     private final ProfessorAssignmentRepository professorAssignmentRepository;
     private final StudentRepository studentRepository;
-    private final EmployeeRepository employeeRepository; // 추가
+    private final EmployeeRepository employeeRepository;
 
     @Autowired
     public ProfessorAssignmentServiceImpl(ProfessorAssignmentRepository professorAssignmentRepository, StudentRepository studentRepository, EmployeeRepository employeeRepository) {
         this.professorAssignmentRepository = professorAssignmentRepository;
-        this.studentRepository = studentRepository; // 추가
-        this.employeeRepository = employeeRepository; // 추가
+        this.studentRepository = studentRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     //지도교수 배정 이력 조회
     public List<ProfessorAssignmentListItem> getAllAssignments() {
         // 모든 배정 이력을 가져와서 DTO 리스트로 변환하여 반환합니다.
         return professorAssignmentRepository.findAll().stream().map(professorAssignment -> {
-            Student student = studentRepository.findById(professorAssignment.getStudentId())
-                    .orElseThrow(() -> new RuntimeException("Student not found"));
-            Employee professor = employeeRepository.findById(professorAssignment.getProfessorId())
-                    .orElseThrow(() -> new RuntimeException("Professor not found"));
+                    // ProfessorAssignment 엔티티에서 교수와 학생의 ID를 가져옵니다.
+                    Student student = professorAssignment.getStudentId();
+                    Employee professor = professorAssignment.getProfessorId();
+
+                    student.setUser(student.getUser());
+                    professor.setUser(professor.getUser());
+
+                    // Student와 Professor의 User 객체를 가져옵니다.
+                    User studentUser = student.getUser();
+                    User professorUser = professor.getUser();
+
+                    String studentDeptId = studentUser.getDeptId().getDeptName();
+                    String professorDeptId = professorUser.getDeptId().getDeptName();
+
 
             // ProfessorAssignmentListItem DTO로 변환
             return new ProfessorAssignmentListItem(
                     professorAssignment.getAssignmentId(),
-                    professor.getEmployeeId(),
-                    professor.getDeptId(),
-                    professor.getEmployeeName(),
-                    student.getStudentId(),
-                    student.getDeptId(),
-                    student.getStudentName(),
+                    professorUser.getUserId(),
+                    professorDeptId,
+                    professorUser.getUserName(),
+                    studentUser.getUserId(),
+                    studentDeptId,
+                    studentUser.getUserName(),
                     professorAssignment.getAssignmentDate()
             );
         })
@@ -58,15 +69,16 @@ public class ProfessorAssignmentServiceImpl implements ProfessorAssignmentServic
     //지도교수 배정 이력 생성
     @Override
     public Long save(ProfessorAssignmentRequest params) {
-        ProfessorAssignment professorAssignment = params.toEntity();
+
+        Employee professor = employeeRepository.findById(params.getProfessorId()).orElseThrow(() -> new IllegalArgumentException("Invalid professor ID"));
+        Student student = studentRepository.findById(params.getStudentId()).orElseThrow(() -> new IllegalArgumentException("Invalid student ID"));
+
+        // ProfessorAssignment 엔티티 생성 및 저장
+        ProfessorAssignment professorAssignment = params.toEntity(professor, student);
         professorAssignmentRepository.save(professorAssignment);
 
-        // 학생의 지도 교수 업데이트
-        Student student = studentRepository.findById(professorAssignment.getStudentId())
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        Employee professor = employeeRepository.findById(professorAssignment.getProfessorId())
-                .orElseThrow(() -> new RuntimeException("Professor not found"));
-        student.setEmployeeId(professor);
+        // Student 엔티티 업데이트
+        student.setProfessorId(professor);
         studentRepository.save(student);
 
         return professorAssignment.getAssignmentId();

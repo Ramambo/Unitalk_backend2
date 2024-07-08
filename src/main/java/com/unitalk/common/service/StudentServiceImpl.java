@@ -2,11 +2,13 @@ package com.unitalk.common.service;
 
 import com.unitalk.common.model.entity.Employee;
 import com.unitalk.common.model.entity.Student;
+import com.unitalk.common.model.entity.User;
 import com.unitalk.common.repository.StudentRepository;
 import com.unitalk.emp.model.dto.StudentListItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,16 +29,19 @@ public class StudentServiceImpl implements StudentService {
         List<Student> students = studentRepository.findAll();
         return students.stream()
                 .map(student -> {
-                    Employee employee = student.getEmployee();
-                    String employeeName = employee != null ? employee.getEmployeeName() : "미배정";
+                    User studentUser = student.getUser();
+                    String studentDeptId = studentUser.getDeptId().getDeptName();
+                    Employee professorId = student.getProfessorId();
+                    String professorName = professorId != null ? professorId.getUser().getUserName() : "미배정";
+
                     return new StudentListItem(
-                            student.getStudentId(),
-                            student.getDeptId(),
-                            student.getStudentName(),
-                            student.getStudentEmail(),
-                            student.getStudentPhoneNumber(),
+                            studentUser.getUserId(),
+                            studentDeptId,
+                            studentUser.getUserName(),
+                            studentUser.getEmail(),
+                            studentUser.getTel(),
                             student.getGrade(),
-                            employeeName
+                            professorName
                     );
                 })
                 .collect(Collectors.toList());

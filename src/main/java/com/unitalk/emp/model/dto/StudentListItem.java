@@ -17,8 +17,8 @@ public class StudentListItem {
     private String deptId; //부서코드(학과)
     private String studentName; //학생 이름
     private String studentEmail; //학생 이메일
-    private String studentPhoneNumber; //학생 전화번호
+    private String studentTel; //학생 전화번호
     private Long grade; //학년
-    private String employeeName; //학생 지도교수
+    private String professorName; //학생 지도교수
 
 }
