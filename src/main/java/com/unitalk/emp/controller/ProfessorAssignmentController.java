@@ -29,10 +29,17 @@ public class ProfessorAssignmentController {
 
     //전체 교수목록 조회
     @GetMapping("/list/professors")
-    public List<ProfessorListItem> getProfessors() {
+    public List<ProfessorListItem> getAllProfessors() {
         // "교수" 부서에 속하는 교직원들의 정보를 가져옵니다.
-        List<ProfessorListItem> professors = professorListService.getProfessors();
+        List<ProfessorListItem> professors = professorListService.getAllProfessors();
         return professors;
+    }
+
+    // 학과별 교수목록 조회
+    @GetMapping("/list/professors/{deptId}")
+    public List<ProfessorListItem> getProfessorsByDeptId(@PathVariable String deptId) {
+        // 특정 학과에 속하는 교수들의 정보를 가져옵니다.
+        return professorListService.getProfessorsByDeptId(deptId);
     }
 
     //전체 학생목록 조회
