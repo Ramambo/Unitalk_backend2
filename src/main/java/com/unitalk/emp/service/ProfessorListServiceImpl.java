@@ -65,7 +65,7 @@ public class ProfessorListServiceImpl implements ProfessorListService {
         //"교수"이면서 특정 학과에 속하는 교직원들의 정보를 조회합니다.
         List<Employee> employees = professorListRepository.findByDeptDetailAndUser_DeptId_DeptName("교수", deptName);
 
-        // Employee 엔티티를 ProfessorListItem DTO로 변환합니다.
+        //Employee 엔티티를 ProfessorListItem DTO로 변환합니다.
         return employees.stream()
                 .map(employee -> {
                     User professorUser = employee.getUser(); // Employee Entity의 employeeId는 User Entity를 참조

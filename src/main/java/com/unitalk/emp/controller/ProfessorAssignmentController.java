@@ -35,10 +35,10 @@ public class ProfessorAssignmentController {
         return professors;
     }
 
-    // 학과별 교수목록 조회
+    //학과별 교수목록 조회
     @GetMapping("/list/professors/{deptId}")
     public List<ProfessorListItem> getProfessorsByDeptId(@PathVariable String deptId) {
-        // 특정 학과에 속하는 교수들의 정보를 가져옵니다.
+        //특정 학과에 속하는 교수들의 정보를 가져옵니다.
         return professorListService.getProfessorsByDeptId(deptId);
     }
 
@@ -46,6 +46,12 @@ public class ProfessorAssignmentController {
     @GetMapping("/list/students")
     public List<StudentListItem> getStudents() {
         return studentListService.getAllStudents();
+    }
+
+    //학과별 학생목록 조회
+    @GetMapping("/list/students/{deptId}")
+    public List<StudentListItem> getStudentsByDeptId(@PathVariable String deptId) {
+        return studentListService.getStudentsByDeptId(deptId);
     }
 
     //전체 지도교수 배정 이력 조회
