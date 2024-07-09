@@ -24,6 +24,7 @@ public class ProgramFileService {
     private final ProgramRepository programRepository;
 
     private static final String uploadDir = System.getProperty("user.home") + "/unitalk/uploads";
+    private static final String fileBaseUrl = "/uploads/program/";
 
     // 파일 경로가 생성
     private void createDirectory(String pathStr) {
@@ -57,10 +58,12 @@ public class ProgramFileService {
             Files.createDirectories(path.getParent());
             Files.write(path, file.getBytes());
 
+            String fileUrl = fileBaseUrl + programNo + "/" + fileSaveName;
+
             ProgramFile programFile = ProgramFile.builder()
                     .fileName(originalFileName)
                     .fileSaveName(fileSaveName)
-                    .filePath(filePath)
+                    .filePath(fileUrl)
                     .fileSize(fileSize)
                     .program(program) // Program 객체 설정
                     .build();

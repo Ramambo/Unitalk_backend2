@@ -34,7 +34,7 @@ public class User {
     private String email;
 
     @Column(name = "user_type", nullable = false)   // 사용자 구분
-    private String userType;
+    private String userType; // 사용자구분 : P 프로페서, S 스튜던트, C 카운셀러, E 임플로이
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Student student;

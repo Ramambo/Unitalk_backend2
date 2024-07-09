@@ -1,5 +1,6 @@
 package com.unitalk.program.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unitalk.common.model.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class ProgramFile {
 
     @ManyToOne
     @JoinColumn(name = "program_no", nullable = false) // 집단상담 번호
+    @JsonIgnore
     private Program program;
 
     @Column(name = "file_name", nullable = false) // 파일 원본명

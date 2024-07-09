@@ -61,8 +61,10 @@ public class Program {
     private Long viewCnt; // 조회수
 
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<ProgramFile> programFiles; // 추가된 부분
+    private List<ProgramFile> programFiles; // 집단상담 파일(이미지)
 
+    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProgramApplicant> applicants;
 
     // 엔티티 필드 업데이트
     public void update(String programName, String programContent, LocalDate recruitStart, LocalDate recruitEnd,

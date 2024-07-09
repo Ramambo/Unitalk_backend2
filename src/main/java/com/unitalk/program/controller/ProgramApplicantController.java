@@ -57,7 +57,9 @@ public class ProgramApplicantController {
             @RequestParam(required = false) Long studentNo,
             @RequestParam(required = false) LocalDate applicantDate,
             @RequestParam(required = false) Long status,
-            Pageable pageable) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        Pageable pageable = PageRequest.of(page, size);
         Page<ProgramApplicantResponseDto> applicants = programApplicantService.getProgramApplicantByFilters(
                         programNo, studentNo, applicantDate, status, pageable);
         return new ResponseEntity<>(applicants, HttpStatus.OK);
@@ -73,7 +75,7 @@ public class ProgramApplicantController {
     }
 
     // 집단상담 신청 수정(삭제)
-    @PatchMapping("/applicant")
+    @PatchMapping("/applicant/{applicantNo}")
     public ResponseEntity<ProgramApplicantResponseDto> cancelApplication(
             @PathVariable Long applicantNo,
             @RequestHeader("employeeNo") Long updaterEmployeeNo) {

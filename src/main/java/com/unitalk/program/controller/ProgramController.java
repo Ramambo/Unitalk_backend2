@@ -51,7 +51,9 @@ public class ProgramController {
             @RequestParam(required = false) LocalDate operationEnd,
             @RequestParam(required = false) Long status,
             @RequestParam(required = false) Long viewCnt,
-            Pageable pageable) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        Pageable pageable = PageRequest.of(page, size);
 
         Page<ProgramResponseDto> programs = programService.getProgramsByFilters(
                 counselorNo, programName, programContent, recruitStart, recruitEnd,
