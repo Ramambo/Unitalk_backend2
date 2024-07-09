@@ -12,7 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 //지도교수 배정을 위한 학생 리스트 조회 아이템
 public class StudentListItem {
-
+    
+    private Long studentNo; //학생 일련번호
     private Long studentId; //학생 ID
     private String deptId; //부서코드(학과)
     private String studentName; //학생 이름

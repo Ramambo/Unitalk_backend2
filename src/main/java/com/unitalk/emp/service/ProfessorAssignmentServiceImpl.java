@@ -34,9 +34,9 @@ public class ProfessorAssignmentServiceImpl implements ProfessorAssignmentServic
     public List<ProfessorAssignmentListItem> getAllAssignments() {
         // 모든 배정 이력을 가져와서 DTO 리스트로 변환하여 반환합니다.
         return professorAssignmentRepository.findAll().stream().map(professorAssignment -> {
-                    // ProfessorAssignment 엔티티에서 교수와 학생의 ID를 가져옵니다.
-                    Student student = professorAssignment.getStudentId();
-                    Employee professor = professorAssignment.getProfessorId();
+                    // ProfessorAssignment 엔티티에서 교수와 학생의 No(이전 ID)를 가져옵니다.
+                    Student student = professorAssignment.getStudentNo();
+                    Employee professor = professorAssignment.getProfessorNo();
 
                     student.setUser(student.getUser());
                     professor.setUser(professor.getUser());
@@ -70,8 +70,8 @@ public class ProfessorAssignmentServiceImpl implements ProfessorAssignmentServic
     @Override
     public Long save(ProfessorAssignmentRequest params) {
 
-        Employee professor = employeeRepository.findById(params.getProfessorId()).orElseThrow(() -> new IllegalArgumentException("Invalid professor ID"));
-        Student student = studentRepository.findById(params.getStudentId()).orElseThrow(() -> new IllegalArgumentException("Invalid student ID"));
+        Employee professor = employeeRepository.findById(params.getProfessorNo()).orElseThrow(() -> new IllegalArgumentException("Invalid professor ID"));
+        Student student = studentRepository.findById(params.getStudentNo()).orElseThrow(() -> new IllegalArgumentException("Invalid student ID"));
 
         // ProfessorAssignment 엔티티 생성 및 저장
         ProfessorAssignment professorAssignment = params.toEntity(professor, student);

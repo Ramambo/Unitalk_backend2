@@ -11,7 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 //지도교수 배정을 위한 지도교수 리스트 조회 아이템
 public class ProfessorListItem {
-
+    
+    private Long employeeNo; //교직원 일련번호
     private Long employeeId; //교직원 ID
     private String deptId; //부서코드(학과)
     private String employeeName; //교직원 이름

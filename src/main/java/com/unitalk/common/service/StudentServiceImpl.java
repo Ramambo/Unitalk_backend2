@@ -34,6 +34,7 @@ public class StudentServiceImpl implements StudentService {
                     String professorName = professorId != null ? professorId.getUser().getUserName() : "미배정";
 
                     return new StudentListItem(
+                            student.getStudentNo(),
                             studentUser.getUserId(),
                             studentDeptId,
                             studentUser.getUserName(),

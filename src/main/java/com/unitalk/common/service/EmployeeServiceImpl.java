@@ -33,6 +33,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                     String professorDeptId = professorUser.getDeptId().getDeptName();
 
                     return new ProfessorListItem(
+                            employee.getEmployeeNo(),
                             professorUser.getUserId(),
                             professorDeptId,
                             professorUser.getUserName(),

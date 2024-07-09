@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 public class ProfessorAssignmentResponse {
 
     private Long assignmentId;
-    private Employee professorId;
-    private Student studentId;
+    private Employee professorNo;
+    private Student studentNo;
     private LocalDateTime assignmentDate;
 
     public ProfessorAssignmentResponse(ProfessorAssignment entity) {
         this.assignmentId = entity.getAssignmentId();
-        this.professorId = entity.getProfessorId();
-        this.studentId = entity.getStudentId();
+        this.professorNo = entity.getProfessorNo();
+        this.studentNo = entity.getStudentNo();
         this.assignmentDate = entity.getAssignmentDate();
     }
 

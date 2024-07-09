@@ -21,19 +21,19 @@ public class ProfessorAssignment {
 
     @ManyToOne
     @JoinColumn(name = "professor_id", nullable = false, referencedColumnName = "employee_no")
-    private Employee professorId; //교수 ID, FK
+    private Employee professorNo; //교수 ID(명시값 employeeId / 실제값 employeeNo), FK
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false, referencedColumnName = "student_no")
-    private Student studentId; //학생 ID, FK
+    private Student studentNo; //학생 ID(명시값 studentId / 실제값 studentNo), FK
 
     @Column(name = "assignment_date", nullable = false)
     private LocalDateTime assignmentDate; //지도교수 배정 일시
 
     @Builder
-    public ProfessorAssignment(Employee professorId, Student studentId) {
-        this.professorId = professorId;
-        this.studentId = studentId;
+    public ProfessorAssignment(Employee professorNo, Student studentNo) {
+        this.professorNo = professorNo;
+        this.studentNo = studentNo;
     }
 
     //지도교수 배정 시점에 현재 시간을 assignmentDate로 설정

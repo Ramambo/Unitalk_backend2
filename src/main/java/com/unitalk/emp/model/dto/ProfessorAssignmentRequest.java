@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProfessorAssignmentRequest {
 
-    private Long professorId;
-    private Long studentId;
+    private Long professorNo;
+    private Long studentNo;
 
     public ProfessorAssignment toEntity(Employee professor, Student student) {
         return ProfessorAssignment.builder()
-                .professorId(professor)
-                .studentId(student)
+                .professorNo(professor)
+                .studentNo(student)
                 .build();
     }
 
