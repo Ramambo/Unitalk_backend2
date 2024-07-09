@@ -28,7 +28,7 @@ public class ProfessorAssignmentController {
     }
 
     //전체 교수목록 조회
-    @GetMapping("/list/professors")
+    @GetMapping("/list/professors/all")
     public List<ProfessorListItem> getAllProfessors() {
         // "교수" 부서에 속하는 교직원들의 정보를 가져옵니다.
         List<ProfessorListItem> professors = professorListService.getAllProfessors();
@@ -43,7 +43,7 @@ public class ProfessorAssignmentController {
     }
 
     //전체 학생목록 조회
-    @GetMapping("/list/students")
+    @GetMapping("/list/students/all")
     public List<StudentListItem> getStudents() {
         return studentListService.getAllStudents();
     }
