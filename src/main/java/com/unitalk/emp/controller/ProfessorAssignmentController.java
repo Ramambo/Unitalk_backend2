@@ -66,7 +66,7 @@ public class ProfessorAssignmentController {
     //전체 지도교수 배정 이력 조회
     @GetMapping("/list/assignments/all")
     public Page<ProfessorAssignmentListItem> getAssignmentsPaged(@RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "10") int size) {
+                                                                 @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("assignmentId").descending());
         return professorAssignmentService.getAllAssignmentsPaged(pageable);
     }
@@ -75,7 +75,7 @@ public class ProfessorAssignmentController {
     @GetMapping("/list/assignments/{deptId}")
     public Page<ProfessorAssignmentListItem> getAssignmentsByDeptIdPaged(@PathVariable String deptId,
                                                                          @RequestParam(defaultValue = "0") int page,
-                                                                         @RequestParam(defaultValue = "10") int size) {
+                                                                         @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("assignmentId").descending());
         return professorAssignmentService.getAssignmentsByDeptIdPaged(deptId, pageable);
     }
