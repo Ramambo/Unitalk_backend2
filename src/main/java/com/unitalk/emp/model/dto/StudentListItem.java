@@ -1,6 +1,5 @@
 package com.unitalk.emp.model.dto;
 
-import com.unitalk.common.model.entity.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -8,6 +8,9 @@ import com.unitalk.emp.service.ProfessorAssignmentService;
 import com.unitalk.emp.service.ProfessorListService;
 import com.unitalk.emp.service.StudentListService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,29 +32,36 @@ public class ProfessorAssignmentController {
 
     //전체 교수목록 조회
     @GetMapping("/list/professors/all")
-    public List<ProfessorListItem> getAllProfessors() {
-        // "교수" 부서에 속하는 교직원들의 정보를 가져옵니다.
-        List<ProfessorListItem> professors = professorListService.getAllProfessors();
-        return professors;
+    public Page<ProfessorListItem> getAllProfessorsPaged(@RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return professorListService.getAllProfessorsPaged(pageable);
     }
 
     //학과별 교수목록 조회
     @GetMapping("/list/professors/{deptId}")
-    public List<ProfessorListItem> getProfessorsByDeptId(@PathVariable String deptId) {
-        //특정 학과에 속하는 교수들의 정보를 가져옵니다.
-        return professorListService.getProfessorsByDeptId(deptId);
+    public Page<ProfessorListItem> getProfessorsByDeptIdPaged(@PathVariable String deptId,
+                                                              @RequestParam(defaultValue = "0") int page,
+                                                              @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return professorListService.getProfessorsByDeptIdPaged(deptId, pageable);
     }
 
     //전체 학생목록 조회
     @GetMapping("/list/students/all")
-    public List<StudentListItem> getStudents() {
-        return studentListService.getAllStudents();
+    public Page<StudentListItem> getStudentsPaged(@RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return studentListService.getAllStudentsPaged(pageable);
     }
 
     //학과별 학생목록 조회
     @GetMapping("/list/students/{deptId}")
-    public List<StudentListItem> getStudentsByDeptId(@PathVariable String deptId) {
-        return studentListService.getStudentsByDeptId(deptId);
+    public Page<StudentListItem> getStudentsByDeptIdPaged(@PathVariable String deptId,
+                                                          @RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return studentListService.getStudentsByDeptIdPaged(deptId, pageable);
     }
 
     //전체 지도교수 배정 이력 조회
