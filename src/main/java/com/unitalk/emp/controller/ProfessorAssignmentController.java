@@ -11,9 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/assign-prof")
@@ -65,9 +64,20 @@ public class ProfessorAssignmentController {
     }
 
     //전체 지도교수 배정 이력 조회
-    @GetMapping("/list/assignments")
-    public List<ProfessorAssignmentListItem> getAssignments() {
-        return professorAssignmentService.getAllAssignments();
+    @GetMapping("/list/assignments/all")
+    public Page<ProfessorAssignmentListItem> getAssignmentsPaged(@RequestParam(defaultValue = "0") int page,
+                                                                 @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("assignmentId").descending());
+        return professorAssignmentService.getAllAssignmentsPaged(pageable);
+    }
+
+    //학과별 지도교수 배정 이력 조회
+    @GetMapping("/list/assignments/{deptId}")
+    public Page<ProfessorAssignmentListItem> getAssignmentsByDeptIdPaged(@PathVariable String deptId,
+                                                                         @RequestParam(defaultValue = "0") int page,
+                                                                         @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("assignmentId").descending());
+        return professorAssignmentService.getAssignmentsByDeptIdPaged(deptId, pageable);
     }
 
     //지도교수 배정 이력 생성

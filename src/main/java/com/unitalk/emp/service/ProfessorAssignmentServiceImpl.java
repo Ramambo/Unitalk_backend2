@@ -10,11 +10,9 @@ import com.unitalk.emp.model.dto.ProfessorAssignmentListItem;
 import com.unitalk.emp.model.dto.ProfessorAssignmentRequest;
 import com.unitalk.emp.repository.ProfessorAssignmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Comparator;
-import java.util.stream.Collectors;
 
 @Service
 public class ProfessorAssignmentServiceImpl implements ProfessorAssignmentService {
@@ -30,54 +28,53 @@ public class ProfessorAssignmentServiceImpl implements ProfessorAssignmentServic
         this.employeeRepository = employeeRepository;
     }
 
-    //지도교수 배정 이력 조회
-    public List<ProfessorAssignmentListItem> getAllAssignments() {
-        // 모든 배정 이력을 가져와서 DTO 리스트로 변환하여 반환합니다.
-        return professorAssignmentRepository.findAll().stream().map(professorAssignment -> {
-                    // ProfessorAssignment 엔티티에서 교수와 학생의 No(이전 ID)를 가져옵니다.
-                    Student student = professorAssignment.getStudentNo();
-                    Employee professor = professorAssignment.getProfessorNo();
+    //전체 지도교수 배정 이력 조회
+    @Override
+    public Page<ProfessorAssignmentListItem> getAllAssignmentsPaged(Pageable pageable) {
+        return professorAssignmentRepository.findAll(pageable).map(this::mapToassignmentListItem);
+    }
 
-                    student.setUser(student.getUser());
-                    professor.setUser(professor.getUser());
+    //학과별 지도교수 배정 이력 조회
+    @Override
+    public Page<ProfessorAssignmentListItem> getAssignmentsByDeptIdPaged(String deptId, Pageable pageable) {
+        return professorAssignmentRepository.findByStudentNo_User_DeptId_DeptId(deptId, pageable).map(this::mapToassignmentListItem);
+    }
 
-                    // Student와 Professor의 User 객체를 가져옵니다.
-                    User studentUser = student.getUser();
-                    User professorUser = professor.getUser();
+    //모든 배정 이력을 ListItem으로 변환
+    private ProfessorAssignmentListItem mapToassignmentListItem(ProfessorAssignment professorAssignment) {
+        Student student = professorAssignment.getStudentNo();
+        Employee professor = professorAssignment.getProfessorNo();
 
-                    String studentDeptId = studentUser.getDeptId().getDeptName();
-                    String professorDeptId = professorUser.getDeptId().getDeptName();
+        student.setUser(student.getUser());
+        professor.setUser(professor.getUser());
 
+        User studentUser = student.getUser();
+        User professorUser = professor.getUser();
 
-            // ProfessorAssignmentListItem DTO로 변환
-            return new ProfessorAssignmentListItem(
-                    professorAssignment.getAssignmentId(),
-                    professorUser.getUserId(),
-                    professorDeptId,
-                    professorUser.getUserName(),
-                    studentUser.getUserId(),
-                    studentDeptId,
-                    studentUser.getUserName(),
-                    professorAssignment.getAssignmentDate()
-            );
-        })
-                //최신순으로 정렬하기
-                .sorted(Comparator.comparingLong(ProfessorAssignmentListItem::getAssignmentId).reversed())
-                .collect(Collectors.toList());
+        String studentDeptId = studentUser.getDeptId().getDeptName();
+        String professorDeptId = professorUser.getDeptId().getDeptName();
+
+        return new ProfessorAssignmentListItem(
+                professorAssignment.getAssignmentId(),
+                professorUser.getUserId(),
+                professorDeptId,
+                professorUser.getUserName(),
+                studentUser.getUserId(),
+                studentDeptId,
+                studentUser.getUserName(),
+                professorAssignment.getAssignmentDate()
+        );
     }
 
     //지도교수 배정 이력 생성
     @Override
     public Long save(ProfessorAssignmentRequest params) {
-
         Employee professor = employeeRepository.findById(params.getProfessorNo()).orElseThrow(() -> new IllegalArgumentException("Invalid professor ID"));
         Student student = studentRepository.findById(params.getStudentNo()).orElseThrow(() -> new IllegalArgumentException("Invalid student ID"));
 
-        // ProfessorAssignment 엔티티 생성 및 저장
         ProfessorAssignment professorAssignment = params.toEntity(professor, student);
         professorAssignmentRepository.save(professorAssignment);
 
-        // Student 엔티티 업데이트
         student.setProfessorId(professor);
         studentRepository.save(student);
 
