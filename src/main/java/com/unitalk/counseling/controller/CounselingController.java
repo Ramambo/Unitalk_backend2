@@ -2,6 +2,7 @@ package com.unitalk.counseling.controller;
 
 import com.unitalk.counseling.model.dto.CounselingCountsDto;
 import com.unitalk.counseling.model.dto.request.CounselingRequestDto;
+import com.unitalk.counseling.model.dto.request.CounselingUpdateDto;
 import com.unitalk.counseling.model.dto.response.CounselingResponseDto;
 import com.unitalk.counseling.service.CounselingService;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,8 @@ public class CounselingController {
     @PutMapping("/{reqNo}")
     public ResponseEntity<CounselingResponseDto> updateCounseling(
             @PathVariable long reqNo,
-            @RequestBody String counselContent) {
-        CounselingResponseDto responseDto = counselingService.updateCounseling(reqNo, counselContent);
+            @RequestBody CounselingUpdateDto updateDto) {
+        CounselingResponseDto responseDto = counselingService.updateCounseling(reqNo, updateDto);
         return ResponseEntity.ok(responseDto);
     }
 

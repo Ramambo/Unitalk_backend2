@@ -1,7 +1,10 @@
 package com.unitalk.counseling.service;
 
+import com.unitalk.common.model.entity.Department;
+import com.unitalk.common.repository.DepartmentRepository;
 import com.unitalk.counseling.model.dto.CounselingCountsDto;
 import com.unitalk.counseling.model.dto.request.CounselingRequestDto;
+import com.unitalk.counseling.model.dto.request.CounselingUpdateDto;
 import com.unitalk.counseling.model.dto.response.CounselingResponseDto;
 import com.unitalk.counseling.model.entity.Counseling;
 import com.unitalk.counseling.repository.CounselingRepository;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -28,17 +32,19 @@ public class CounselingService {
     private final StudentRepository studentRepository;
     private final EmployeeRepository employeeRepository;
     private final CounselorScheduleRepository scheduleRepository;
+    private final DepartmentRepository departmentRepository;
     private final ModelMapper modelMapper;
 
     public CounselingService(CounselingRepository counselingRepository,
                              StudentRepository studentRepository,
                              EmployeeRepository employeeRepository,
-                             CounselorScheduleRepository scheduleRepository,
+                             CounselorScheduleRepository scheduleRepository, DepartmentRepository departmentRepository,
                              ModelMapper modelMapper) {
         this.counselingRepository = counselingRepository;
         this.studentRepository = studentRepository;
         this.employeeRepository = employeeRepository;
         this.scheduleRepository = scheduleRepository;
+        this.departmentRepository = departmentRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -55,6 +61,9 @@ public class CounselingService {
         counseling.setCounselor(counselor);
         counseling.setSchedule(scheduleRepository.findById(requestDto.getSchNo())
                 .orElseThrow(() -> new RuntimeException("Schedule not found")));
+        Department department = departmentRepository.findById(requestDto.getCounselType())
+                .orElseThrow(() -> new RuntimeException("Department not found"));
+        counseling.setDepartment(department);
         counseling.setStatus(2L);
         counseling.setApplicationDate(LocalDateTime.now());
 
@@ -64,10 +73,10 @@ public class CounselingService {
 
     // 상담 내용 업데이트
     @Transactional
-    public CounselingResponseDto updateCounseling(Long reqNo, String counselContent) {
+    public CounselingResponseDto updateCounseling(Long reqNo, CounselingUpdateDto updateDto) {
         Counseling counseling = counselingRepository.findById(reqNo)
                 .orElseThrow(() -> new RuntimeException("Counseling not found"));
-        counseling.setCounselContent(counselContent);
+        counseling.setCounselContent(updateDto.getCounselContent());
         counseling.setStatus(3L);
         counseling.setRecordTime(LocalDateTime.now());
 
@@ -76,18 +85,12 @@ public class CounselingService {
     }
 
     // 상담 신청 번호로 상담 정보 조회
+    @Transactional
     public CounselingResponseDto getCounselingById(Long reqNo) {
         Counseling counseling = counselingRepository.findById(reqNo)
                 .orElseThrow(() -> new RuntimeException("Counseling not found"));
-        return modelMapper.map(counseling, CounselingResponseDto.class);
-    }
 
-    // 학생ID로 해당 학생의 모든 상담 정보 조회
-    public Page<CounselingResponseDto> getCounselingsByStudentNo(Long studentNo, Pageable pageable) {
-        Student student = studentRepository.findById(studentNo)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-        Page<Counseling> counselings = counselingRepository.findByStudentOrderByApplicationDateDesc(student, pageable);
-        return counselings.map(counseling -> modelMapper.map(counseling, CounselingResponseDto.class));
+        return modelMapper.map(counseling, CounselingResponseDto.class);
     }
 
     // 상담자ID로 해당 상담사의 모든 상담 정보 조회
@@ -122,12 +125,16 @@ public class CounselingService {
         return counts;
     }
 
+    // 학생ID로 해당 학생의 모든 상담 정보 조회
     public Page<CounselingResponseDto> getCounselingsByStudentNoWithFilters(
             Long studentNo, Long counselMode, Long status, String counselType,
             LocalDate startDate, LocalDate endDate, Pageable pageable) {
 
+        LocalDateTime startDateTime = (startDate != null) ? startDate.atStartOfDay() : null;
+        LocalDateTime endDateTime = (endDate != null) ? endDate.atTime(LocalTime.MAX) : null;
+
         Page<Counseling> counselings = counselingRepository.findByFilters(
-                studentNo, counselMode, status, counselType, startDate, endDate, pageable);
+                studentNo, counselMode, status, counselType,startDateTime, endDateTime, pageable);
 
         return counselings.map(counseling -> modelMapper.map(counseling, CounselingResponseDto.class));
     }

@@ -32,4 +32,6 @@ public class Employee {
     @Column(name = "dept_detail")   // 교직원구분
     private String deptDetail;
 
+
+
 }

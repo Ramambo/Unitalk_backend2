@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -24,15 +24,15 @@ public interface CounselingRepository extends JpaRepository<Counseling, Long> {
             "AND (:counselMode IS NULL OR c.counselMode = :counselMode) " +
             "AND (:status IS NULL OR c.status = :status) " +
             "AND (:counselType IS NULL OR c.department.deptId = :counselType) " +
-            "AND (:startDate IS NULL OR c.counselDate >= :startDate) " +
-            "AND (:endDate IS NULL OR c.counselDate <= :endDate)")
+            "AND (:startDate IS NULL OR c.applicationDate >= :startDate) " +
+            "AND (:endDate IS NULL OR c.applicationDate <= :endDate)")
     Page<Counseling> findByFilters(
             @Param("studentNo") Long studentNo,
             @Param("counselMode") Long counselMode,
             @Param("status") Long status,
             @Param("counselType") String counselType,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
             Pageable pageable
     );
 
