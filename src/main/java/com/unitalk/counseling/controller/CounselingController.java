@@ -87,4 +87,21 @@ public class CounselingController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/counselor/{counselorNo}/filtered")
+    public ResponseEntity<Page<CounselingResponseDto>> getFilteredCounselingsByCounselorNo(
+            @PathVariable Long counselorNo,
+            @RequestParam(required = false) Long status,
+            @RequestParam(required = false) Boolean hasResult,
+            @RequestParam(required = false) String searchQuery,
+            @RequestParam(required = false, defaultValue = "latest") String sortOrder,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CounselingResponseDto> responseDtos = counselingService.getFilteredCounselingsByCounselorNo(
+                counselorNo, status, hasResult, searchQuery, sortOrder, pageable);
+
+        return ResponseEntity.ok(responseDtos);
+    }
+
 }

@@ -15,7 +15,9 @@ import com.unitalk.common.model.entity.Employee;
 import com.unitalk.common.model.entity.Student;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -135,6 +137,18 @@ public class CounselingService {
 
         Page<Counseling> counselings = counselingRepository.findByFilters(
                 studentNo, counselMode, status, counselType,startDateTime, endDateTime, pageable);
+
+        return counselings.map(counseling -> modelMapper.map(counseling, CounselingResponseDto.class));
+    }
+
+    public Page<CounselingResponseDto> getFilteredCounselingsByCounselorNo(
+            Long counselorNo, Long status, Boolean hasResult, String searchQuery, String sortOrder, Pageable pageable) {
+
+        Sort sort = Sort.by(sortOrder.equals("oldest") ? Sort.Direction.ASC : Sort.Direction.DESC, "counselDate");
+        Pageable sortedPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        Page<Counseling> counselings = counselingRepository.findFilteredCounselings(
+                counselorNo, status, hasResult, searchQuery, sortedPageable);
 
         return counselings.map(counseling -> modelMapper.map(counseling, CounselingResponseDto.class));
     }

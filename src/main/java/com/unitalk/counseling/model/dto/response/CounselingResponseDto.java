@@ -23,7 +23,7 @@ public class CounselingResponseDto {
     private CounselorSchedule schedule;
     private LocalDateTime applicationDate;
     private Long counselMode;
-    private Department counselType;
+    private Department department;
     private String applicationContent;
     private Long status;
     private String counselContent;
