@@ -28,13 +28,14 @@ public class ProgramService {
     private final ProgramFileRepository programFileRepository;
 
     // 집단상담 목록 조회
+    /*
+        Stream API 메서드: map(Program::toDto);
+        Program의 toDto를 참조한다.
+    */
     public Page<ProgramResponseDto> getAllPrograms(Pageable pageable) {
         Page<Program> programs = programRepository.findAllByOrderByProgramNoDesc(pageable);
         return programs.map(this::ProgramDto);
     }
-    /* Stream API 메서드: map(Program::toDto);
-       Program의 toDto를 참조한다.
-    */
 
     // 집단상담 필터 및 검색
     public Page<ProgramResponseDto> getProgramsByFilters(Long counselorNo, String programName, String programContent,
@@ -53,7 +54,7 @@ public class ProgramService {
         Program program = programRepository.findById(programNo)
                 .orElseThrow(() -> new EntityNotFoundException("게시글이 없습니다." + programNo));
 
-        // 조회수
+        // 조회수 증가
         program.viewCount();
         programRepository.save(program);
 
@@ -67,6 +68,7 @@ public class ProgramService {
         Employee employee = employeeRepository.findById(employeeNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + employeeNo));
 
+        // 교직원 검증
         if (!employee.isStaff()) {
             throw new IllegalArgumentException("교직원만 프로그램을 입력할 수 있습니다.");
         }
@@ -107,6 +109,7 @@ public class ProgramService {
         Employee employee = employeeRepository.findById(employeeNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + employeeNo));
 
+        // 교직원 검증
         if (!employee.isStaff()) {
             throw new IllegalArgumentException("교직원만 프로그램을 수정할 수 있습니다.");
         }
@@ -115,6 +118,7 @@ public class ProgramService {
         Employee counselor = employeeRepository.findById(requestDto.getCounselorNo())
                 .orElseThrow(() -> new EntityNotFoundException("해당 상담사 정보가 없습니다." + requestDto.getCounselorNo()));
 
+        // 상담사 검증
         if (!counselor.isCounselor()) {
             throw new IllegalArgumentException("상담사만 상담사로 지정할 수 있습니다.");
         }
@@ -137,6 +141,7 @@ public class ProgramService {
         programRepository.delete(program);
     }
 
+    // 엔티티를 DTO로 변환
     private ProgramResponseDto ProgramDto(Program program) {
         List<ProgramFile> files = programFileRepository.findByProgram(program);
         List<ProgramFileDto> fileDtos = files.stream()

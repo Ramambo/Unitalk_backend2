@@ -17,12 +17,12 @@ import java.time.LocalDate;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "studentNo")
 public class Student {
     @Id
-    @Column(name = "student_no")    // 학생일련번호
+    @Column(name = "student_no")    // 학생번호
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long studentNo;
 
     @OneToOne
-    @JoinColumn(name = "student_id", unique = true, nullable = false) // 학생번호
+    @JoinColumn(name = "student_id", unique = true, nullable = false) // 학생 ID
     private User user;
 
     @Column(name = "reg_date", nullable = false)  // 입학일
@@ -32,7 +32,7 @@ public class Student {
     private Long grade;
 
     @ManyToOne
-    @JoinColumn(name = "professor_no")  // 교수일련번호
+    @JoinColumn(name = "professor_no")  // 교수번호
     private Employee professor;
 
 }

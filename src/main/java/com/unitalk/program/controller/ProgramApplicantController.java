@@ -66,11 +66,15 @@ public class ProgramApplicantController {
     }
 
     // 특정 학생의 집단상담 신청 작성(교직원, 상담사)
+    /*
+        @RequestHeader("employeeNo") Long employeeNo
+        요청 보낸 헤더에서 직원번호 추출하여 비교, 직원만 작성 가능
+    */
     @PostMapping("/applicant-employee")
     public ResponseEntity<ProgramApplicantResponseDto> createApplicationForStudent(
             @RequestBody ProgramApplicantRequestDto requestDto,
-            @RequestHeader("employeeNo") Long creatorEmployeeNo) {
-        ProgramApplicantResponseDto responseDto = programApplicantService.createApplicationForStudent(requestDto, creatorEmployeeNo);
+            @RequestHeader("employeeNo") Long employeeNo) {
+        ProgramApplicantResponseDto responseDto = programApplicantService.createApplicationForStudent(requestDto, employeeNo);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
@@ -78,8 +82,8 @@ public class ProgramApplicantController {
     @PatchMapping("/applicant/{applicantNo}")
     public ResponseEntity<ProgramApplicantResponseDto> cancelApplication(
             @PathVariable Long applicantNo,
-            @RequestHeader("employeeNo") Long updaterEmployeeNo) {
-        ProgramApplicantResponseDto responseDto = programApplicantService.cancelApplication(applicantNo, updaterEmployeeNo);
+            @RequestHeader("employeeNo") Long employeeNo) {
+        ProgramApplicantResponseDto responseDto = programApplicantService.cancelApplication(applicantNo, employeeNo);
         return ResponseEntity.ok(responseDto);
     }
 

@@ -69,17 +69,21 @@ public class ProgramController {
     }
 
     // 집단상담 작성
+    /*
+        @RequestHeader("employeeNo") Long employeeNo
+        요청 보낸 헤더에서 직원번호 추출하여 비교, 직원만 작성 가능
+    */
     @PostMapping("/program")
     public ResponseEntity<ProgramResponseDto> createProgram(
             @Valid @ModelAttribute("program") String programJson,
             @RequestPart("files") List<MultipartFile> files,
-            @RequestHeader("employeeNo") Long creatorEmployeeNo) throws IOException {
+            @RequestHeader("employeeNo") Long employeeNo) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         ProgramRequestDto requestDto = objectMapper.readValue(programJson, ProgramRequestDto.class);
 
-        ProgramResponseDto program = programService.createProgram(requestDto, creatorEmployeeNo);
+        ProgramResponseDto program = programService.createProgram(requestDto, employeeNo);
         programFileService.saveFiles(files, program.getProgramNo());
 
         return new ResponseEntity<>(program, HttpStatus.CREATED);
@@ -91,13 +95,13 @@ public class ProgramController {
             @PathVariable Long programNo,
             @Valid @ModelAttribute("program") String programJson,
             @RequestPart("files") List<MultipartFile> files,
-            @RequestHeader("employeeNo") Long updaterEmployeeNo) throws IOException {
+            @RequestHeader("employeeNo") Long employeeNo) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         ProgramRequestDto requestDto = objectMapper.readValue(programJson, ProgramRequestDto.class);
 
-        ProgramResponseDto program = programService.updateProgram(programNo, requestDto, updaterEmployeeNo);
+        ProgramResponseDto program = programService.updateProgram(programNo, requestDto, employeeNo);
         programFileService.saveFiles(files, program.getProgramNo());
 
         return new ResponseEntity<>(program, HttpStatus.OK);

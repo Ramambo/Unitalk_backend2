@@ -109,6 +109,7 @@ public class ProgramApplicantService {
         return ProgramDto(updatedApplication);
     }
 
+    // 엔티티를 DTO로 변환
     private ProgramApplicantResponseDto ProgramDto(ProgramApplicant programApplicant) {
         return ProgramApplicantResponseDto.builder()
                 .applicantNo(programApplicant.getApplicantNo())
