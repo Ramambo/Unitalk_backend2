@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +39,7 @@ public class ProgramController {
         return new ResponseEntity<>(programs, HttpStatus.OK);
     }
 
+    // 집단상담 필터 및 검색
     @GetMapping("/programs/search")
     public ResponseEntity<Page<ProgramResponseDto>> getProgramsByFilters(
             @RequestParam(required = false) Long counselorNo,
@@ -52,16 +52,8 @@ public class ProgramController {
             @RequestParam(required = false) Long status,
             @RequestParam(required = false) Long viewCnt,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "16") int size,
-            @RequestParam(required = false, defaultValue = "programNo") String sort) {
-
-        Sort sorting;
-        if ("status".equals(sort)) {
-            sorting = Sort.by(Sort.Direction.ASC, sort);
-        } else {
-            sorting = Sort.by(Sort.Direction.DESC, sort);
-        }
-        Pageable pageable = PageRequest.of(page, size, sorting);
+            @RequestParam(defaultValue = "20") int size) {
+        Pageable pageable = PageRequest.of(page, size);
 
         Page<ProgramResponseDto> programs = programService.getProgramsByFilters(
                 counselorNo, programName, programContent, recruitStart, recruitEnd,
