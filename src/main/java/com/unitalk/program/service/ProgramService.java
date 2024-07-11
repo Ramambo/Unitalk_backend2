@@ -38,14 +38,14 @@ public class ProgramService {
     }
 
     // 집단상담 필터 및 검색
-    public Page<ProgramResponseDto> getProgramsByFilters(Long counselorNo, String programName, String programContent,
-                                                            LocalDate recruitStart, LocalDate recruitEnd,
-                                                            LocalDate operationStart, LocalDate operationEnd,
-                                                            Long status, Long viewCnt, Pageable pageable) {
+    public Page<ProgramResponseDto> getProgramsByFilters(Long counselorNo, String keyword, String programName, String programContent,
+                                                         LocalDate recruitStart, LocalDate recruitEnd,
+                                                         LocalDate operationStart, LocalDate operationEnd,
+                                                         Long status, Long viewCnt, Pageable pageable) {
 
-        Page<Program> programs = programRepository.findByFilters(counselorNo, programName, programContent,
-                                                                    recruitStart, recruitEnd,
-                                                                    operationStart, operationEnd, status, viewCnt, pageable);
+        Page<Program> programs = programRepository.findByFilters(counselorNo, keyword, programName, programContent,
+                recruitStart, recruitEnd,
+                operationStart, operationEnd, status, viewCnt, pageable);
         return programs.map(this::ProgramDto);
     }
 

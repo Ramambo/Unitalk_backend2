@@ -44,6 +44,7 @@ public class ProgramController {
     @GetMapping("/programs/search")
     public ResponseEntity<Page<ProgramResponseDto>> getProgramsByFilters(
             @RequestParam(required = false) Long counselorNo,
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String programName,
             @RequestParam(required = false) String programContent,
             @RequestParam(required = false) LocalDate recruitStart,
@@ -65,7 +66,7 @@ public class ProgramController {
         Pageable pageable = PageRequest.of(page, size, sorting);
 
         Page<ProgramResponseDto> programs = programService.getProgramsByFilters(
-                counselorNo, programName, programContent, recruitStart, recruitEnd,
+                counselorNo, keyword, programName, programContent, recruitStart, recruitEnd,
                 operationStart, operationEnd, status, viewCnt, pageable);
         return new ResponseEntity<>(programs, HttpStatus.OK);
     }
