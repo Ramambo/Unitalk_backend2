@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.unitalk.program.model.dto.request.ProgramRequestDto;
 import com.unitalk.program.model.dto.response.ProgramResponseDto;
+import com.unitalk.program.model.entity.Program;
 import com.unitalk.program.service.ProgramFileService;
 import com.unitalk.program.service.ProgramService;
 import jakarta.validation.Valid;
@@ -122,6 +123,13 @@ public class ProgramController {
     public ResponseEntity<Void> deleteProgram(@PathVariable Long programNo) {
         programService.deleteProgram(programNo);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // 메인페이지 TOP12
+    @GetMapping("/main/top12programs")
+    public ResponseEntity<List<ProgramResponseDto>> getTop12Programs() {
+        List<ProgramResponseDto> programs = programService.getTop12Programs();
+        return new ResponseEntity<>(programs, HttpStatus.OK);
     }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface ProgramRepository extends JpaRepository<Program, Long> {
@@ -38,4 +39,9 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     );
 
     Page<Program> findAllByOrderByProgramNoDesc(Pageable pageable);
+
+    // 메인페이지 TOP12
+    @Query("SELECT p FROM Program p WHERE p.status = 1 ORDER BY p.viewCnt DESC")
+    Page<Program> findTop12ByStatusOrderByViewCntDesc(Pageable pageable);
+
 }
