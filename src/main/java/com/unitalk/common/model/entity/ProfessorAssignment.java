@@ -18,7 +18,7 @@ public class ProfessorAssignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "assignment_no", nullable = false)
-    private Long assignmentId; //지도교수 배정 이력 일련번호, PK
+    private Long assignmentNo; //지도교수 배정 이력 일련번호, PK
 
     @ManyToOne
     @JoinColumn(name = "professor_no", nullable = false, referencedColumnName = "employee_no")

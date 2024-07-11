@@ -41,7 +41,7 @@ public class ProfessorListServiceImpl implements ProfessorListService {
         }
 
         String deptName = department.getDeptName();
-        Page<Employee> employeesPage = professorListRepository.findByDeptDetailAndUser_DeptId_DeptName("교수", deptName, pageable);
+        Page<Employee> employeesPage = professorListRepository.findByDeptDetailAndUser_Department_DeptName("교수", deptName, pageable);
         return employeesPage.map(this::mapEmployeeToProfessorListItem);
     }
 
@@ -50,7 +50,7 @@ public class ProfessorListServiceImpl implements ProfessorListService {
         return new ProfessorListItem(
                 employee.getEmployeeNo(),
                 professorUser.getUserId(),
-                professorUser.getDeptId().getDeptName(),
+                professorUser.getDepartment().getDeptName(),
                 professorUser.getUserName(),
                 professorUser.getEmail(),
                 professorUser.getTel()

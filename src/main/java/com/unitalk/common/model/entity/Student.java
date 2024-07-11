@@ -47,8 +47,8 @@ public class Student {
     }
 
     //Setter for 지도교수 배정
-    public void setProfessorId(Employee professorId) {
-        this.professorId = professorId;
+    public void setProfessorNo(Employee professor) {
+        this.professor = professor;
     }
 
 }

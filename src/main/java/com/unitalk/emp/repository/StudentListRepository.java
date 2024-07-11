@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface StudentListRepository extends JpaRepository<Student, Long> {
 
     //학과별 학생목록 조회
-    Page<Student> findByUserDeptIdDeptId(String deptId, Pageable pageable);
+    Page<Student> findByUserDepartmentDeptId(String deptId, Pageable pageable);
 
 }
