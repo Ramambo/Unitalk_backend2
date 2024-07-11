@@ -4,8 +4,6 @@ import com.unitalk.common.model.entity.Employee;
 import com.unitalk.common.model.entity.ProfessorAssignment;
 import com.unitalk.common.model.entity.Student;
 import com.unitalk.common.model.entity.User;
-import com.unitalk.common.repository.EmployeeRepository;
-import com.unitalk.common.repository.StudentRepository;
 import com.unitalk.emp.model.dto.ProfessorAssignmentListItem;
 import com.unitalk.emp.model.dto.ProfessorAssignmentRequest;
 import com.unitalk.emp.repository.ProfessorAssignmentRepository;
