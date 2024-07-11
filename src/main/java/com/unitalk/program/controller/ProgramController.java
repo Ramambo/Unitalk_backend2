@@ -25,7 +25,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/program")
 @RequiredArgsConstructor
 public class ProgramController {
 
@@ -33,7 +33,7 @@ public class ProgramController {
     private final ProgramFileService programFileService;
 
     // 집단상담 목록 조회
-    @GetMapping("/programs")
+    @GetMapping("/list")
     public ResponseEntity<Page<ProgramResponseDto>> getAllPrograms(@RequestParam(defaultValue = "0") int page,
                                                                    @RequestParam(defaultValue = "16") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -42,7 +42,7 @@ public class ProgramController {
     }
 
     // 집단상담 필터 및 검색
-    @GetMapping("/programs/search")
+    @GetMapping("/list/search")
     public ResponseEntity<Page<ProgramResponseDto>> getProgramsByFilters(
             @RequestParam(required = false) Long counselorNo,
             @RequestParam(required = false) String keyword,
@@ -73,7 +73,7 @@ public class ProgramController {
     }
 
     // 집단상담 조회
-    @GetMapping("/program/{programNo}")
+    @GetMapping("/{programNo}")
     public ResponseEntity<ProgramResponseDto> getProgramById(@PathVariable Long programNo) {
         ProgramResponseDto program = programService.getProgramById(programNo);
         return new ResponseEntity<>(program, HttpStatus.OK);
@@ -84,7 +84,7 @@ public class ProgramController {
         @RequestHeader("employeeNo") Long employeeNo
         요청 보낸 헤더에서 직원번호 추출하여 비교, 직원만 작성 가능
     */
-    @PostMapping("/program")
+    @PostMapping()
     public ResponseEntity<ProgramResponseDto> createProgram(
             @Valid @ModelAttribute("program") String programJson,
             @RequestPart("files") List<MultipartFile> files,
@@ -101,7 +101,7 @@ public class ProgramController {
     }
 
     // 집단상담 수정
-    @PutMapping("/program/{programNo}")
+    @PutMapping("/{programNo}")
     public ResponseEntity<ProgramResponseDto> updateProgram(
             @PathVariable Long programNo,
             @Valid @ModelAttribute("program") String programJson,
@@ -119,14 +119,14 @@ public class ProgramController {
     }
 
     // 집단상담 삭제
-    @DeleteMapping("/program/{programNo}")
+    @DeleteMapping("/{programNo}")
     public ResponseEntity<Void> deleteProgram(@PathVariable Long programNo) {
         programService.deleteProgram(programNo);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     // 메인페이지 TOP12
-    @GetMapping("/main/top12programs")
+    @GetMapping("/main/top12")
     public ResponseEntity<List<ProgramResponseDto>> getTop12Programs() {
         List<ProgramResponseDto> programs = programService.getTop12Programs();
         return new ResponseEntity<>(programs, HttpStatus.OK);
