@@ -28,7 +28,7 @@ public class ProfessorListServiceImpl implements ProfessorListService {
     // 전체 교수목록 조회 (페이징 처리)
     @Override
     public Page<ProfessorListItem> getAllProfessorsPaged(Pageable pageable) {
-        Page<Employee> employeesPage = professorListRepository.findByDeptDetail("PRO", pageable);
+        Page<Employee> employeesPage = professorListRepository.findByDeptDetail("교수", pageable);
         return employeesPage.map(this::mapEmployeeToProfessorListItem);
     }
 
@@ -41,7 +41,7 @@ public class ProfessorListServiceImpl implements ProfessorListService {
         }
 
         String deptName = department.getDeptName();
-        Page<Employee> employeesPage = professorListRepository.findByDeptDetailAndUser_Department_DeptName("PRO", deptName, pageable);
+        Page<Employee> employeesPage = professorListRepository.findByDeptDetailAndUser_Department_DeptName("교수", deptName, pageable);
         return employeesPage.map(this::mapEmployeeToProfessorListItem);
     }
 
