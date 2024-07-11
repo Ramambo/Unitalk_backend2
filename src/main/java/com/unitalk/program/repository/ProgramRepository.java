@@ -22,7 +22,6 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             "AND (:operationEnd IS NULL OR p.operationEnd <= :operationEnd) " +
             "AND (:status IS NULL OR p.status = :status) " +
             "AND (:viewCnt IS NULL OR p.viewCnt >= :viewCnt)")
-
     Page<Program> findByFilters(
             @Param("counselorNo") Long counselorNo,
             @Param("programName") String programName,
