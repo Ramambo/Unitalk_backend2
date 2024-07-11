@@ -9,11 +9,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
 public interface ProgramRepository extends JpaRepository<Program, Long> {
     @Query("SELECT p FROM Program p WHERE " +
             "(:counselorNo IS NULL OR p.counselor.id = :counselorNo) " +
+            "AND (:keyword IS NULL OR LOWER(p.programName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR LOWER(p.programContent) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
             "AND (:programName IS NULL OR p.programName LIKE %:programName%) " +
             "AND (:programContent IS NULL OR p.programContent LIKE %:programContent%) " +
             "AND (:recruitStart IS NULL OR p.recruitStart >= :recruitStart) " +
@@ -24,6 +26,7 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
             "AND (:viewCnt IS NULL OR p.viewCnt >= :viewCnt)")
     Page<Program> findByFilters(
             @Param("counselorNo") Long counselorNo,
+            @Param("keyword") String keyword,
             @Param("programName") String programName,
             @Param("programContent") String programContent,
             @Param("recruitStart") LocalDate recruitStart,
@@ -36,4 +39,9 @@ public interface ProgramRepository extends JpaRepository<Program, Long> {
     );
 
     Page<Program> findAllByOrderByProgramNoDesc(Pageable pageable);
+
+    // 메인페이지 TOP12
+    @Query("SELECT p FROM Program p WHERE p.status = 1 ORDER BY p.viewCnt DESC")
+    Page<Program> findTop12ByStatusOrderByViewCntDesc(Pageable pageable);
+
 }

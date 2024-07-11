@@ -12,6 +12,7 @@ import com.unitalk.program.repository.ProgramRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,14 +39,14 @@ public class ProgramService {
     }
 
     // 집단상담 필터 및 검색
-    public Page<ProgramResponseDto> getProgramsByFilters(Long counselorNo, String programName, String programContent,
-                                                            LocalDate recruitStart, LocalDate recruitEnd,
-                                                            LocalDate operationStart, LocalDate operationEnd,
-                                                            Long status, Long viewCnt, Pageable pageable) {
+    public Page<ProgramResponseDto> getProgramsByFilters(Long counselorNo, String keyword, String programName, String programContent,
+                                                         LocalDate recruitStart, LocalDate recruitEnd,
+                                                         LocalDate operationStart, LocalDate operationEnd,
+                                                         Long status, Long viewCnt, Pageable pageable) {
 
-        Page<Program> programs = programRepository.findByFilters(counselorNo, programName, programContent,
-                                                                    recruitStart, recruitEnd,
-                                                                    operationStart, operationEnd, status, viewCnt, pageable);
+        Page<Program> programs = programRepository.findByFilters(counselorNo, keyword, programName, programContent,
+                recruitStart, recruitEnd,
+                operationStart, operationEnd, status, viewCnt, pageable);
         return programs.map(this::ProgramDto);
     }
 
@@ -179,6 +180,13 @@ public class ProgramService {
                 .thumbnailFile(thumbnailFileDto)
                 .files(fileDtos)
                 .build();
+    }
+
+    // 메인페이지 TOP12
+    public List<ProgramResponseDto> getTop12Programs() {
+        Pageable pageable = PageRequest.of(0, 12);
+        Page<Program> programsPage = programRepository.findTop12ByStatusOrderByViewCntDesc(pageable);
+        return programsPage.getContent().stream().map(this::ProgramDto).toList();
     }
 
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.unitalk.program.model.dto.request.ProgramRequestDto;
 import com.unitalk.program.model.dto.response.ProgramResponseDto;
+import com.unitalk.program.model.entity.Program;
 import com.unitalk.program.service.ProgramFileService;
 import com.unitalk.program.service.ProgramService;
 import jakarta.validation.Valid;
@@ -44,6 +45,7 @@ public class ProgramController {
     @GetMapping("/programs/search")
     public ResponseEntity<Page<ProgramResponseDto>> getProgramsByFilters(
             @RequestParam(required = false) Long counselorNo,
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String programName,
             @RequestParam(required = false) String programContent,
             @RequestParam(required = false) LocalDate recruitStart,
@@ -65,7 +67,7 @@ public class ProgramController {
         Pageable pageable = PageRequest.of(page, size, sorting);
 
         Page<ProgramResponseDto> programs = programService.getProgramsByFilters(
-                counselorNo, programName, programContent, recruitStart, recruitEnd,
+                counselorNo, keyword, programName, programContent, recruitStart, recruitEnd,
                 operationStart, operationEnd, status, viewCnt, pageable);
         return new ResponseEntity<>(programs, HttpStatus.OK);
     }
@@ -121,6 +123,13 @@ public class ProgramController {
     public ResponseEntity<Void> deleteProgram(@PathVariable Long programNo) {
         programService.deleteProgram(programNo);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    // 메인페이지 TOP12
+    @GetMapping("/main/top12programs")
+    public ResponseEntity<List<ProgramResponseDto>> getTop12Programs() {
+        List<ProgramResponseDto> programs = programService.getTop12Programs();
+        return new ResponseEntity<>(programs, HttpStatus.OK);
     }
 
 }
