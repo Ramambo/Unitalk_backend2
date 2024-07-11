@@ -19,24 +19,29 @@ import java.time.LocalDate;
 //학생정보 Entity
 public class Student {
 
+    //학생 일련번호, PK
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "student_no", nullable = false)
-    private Long studentNo; //학생 일련번호, PK
+    private Long studentNo;
 
+    //학생 ID(학번)
     @OneToOne
     @JoinColumn(name = "student_id", unique = true, nullable = false, referencedColumnName = "user_id")
-    private User user; //학생 ID(학번)
+    private User user;
 
+    //입학연월일
     @Column(name = "reg_date", nullable = false)
-    private LocalDate regDate; //입학연월일
+    private LocalDate regDate;
 
+    //학년
     @Column(name = "grade", nullable = false)
-    private Long grade; //학년
+    private Long grade;
 
+    //교수 No(지도교수)
     @ManyToOne
-    @JoinColumn(name = "professor_id")
-    private Employee professorId; //교직원 ID(지도교수)
+    @JoinColumn(name = "professor_no")
+    private Employee professor;
 
     @Builder
     public Student(User user, LocalDate regDate, Long grade) {
@@ -46,8 +51,8 @@ public class Student {
     }
 
     //Setter for 지도교수 배정
-    public void setProfessorId(Employee professorId) {
-        this.professorId = professorId;
+    public void setProfessorNo(Employee professor) {
+        this.professor = professor;
     }
 
 }

@@ -37,7 +37,7 @@ public class ProfessorAssignmentServiceImpl implements ProfessorAssignmentServic
     //학과별 지도교수 배정 이력 조회
     @Override
     public Page<ProfessorAssignmentListItem> getAssignmentsByDeptIdPaged(String deptId, Pageable pageable) {
-        return professorAssignmentRepository.findByStudentNo_User_DeptId_DeptId(deptId, pageable).map(this::mapToassignmentListItem);
+        return professorAssignmentRepository.findByStudentNo_User_Department_DeptId(deptId, pageable).map(this::mapToassignmentListItem);
     }
 
     //모든 배정 이력을 ListItem으로 변환
@@ -51,11 +51,11 @@ public class ProfessorAssignmentServiceImpl implements ProfessorAssignmentServic
         User studentUser = student.getUser();
         User professorUser = professor.getUser();
 
-        String studentDeptId = studentUser.getDeptId().getDeptName();
-        String professorDeptId = professorUser.getDeptId().getDeptName();
+        String studentDeptId = studentUser.getDepartment().getDeptName();
+        String professorDeptId = professorUser.getDepartment().getDeptName();
 
         return new ProfessorAssignmentListItem(
-                professorAssignment.getAssignmentId(),
+                professorAssignment.getAssignmentNo(),
                 professorUser.getUserId(),
                 professorDeptId,
                 professorUser.getUserName(),
@@ -75,10 +75,10 @@ public class ProfessorAssignmentServiceImpl implements ProfessorAssignmentServic
         ProfessorAssignment professorAssignment = params.toEntity(professor, student);
         professorAssignmentRepository.save(professorAssignment);
 
-        student.setProfessorId(professor);
+        student.setProfessorNo(professor);
         studentRepository.save(student);
 
-        return professorAssignment.getAssignmentId();
+        return professorAssignment.getAssignmentNo();
     }
 
 }

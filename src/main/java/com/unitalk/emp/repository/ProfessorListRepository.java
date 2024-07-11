@@ -15,6 +15,6 @@ public interface ProfessorListRepository extends JpaRepository<Employee, Long> {
     Page<Employee> findByDeptDetail(String deptDetail, Pageable pageable);
 
     // 학과별 교수목록 조회 (페이징 처리)
-    Page<Employee> findByDeptDetailAndUser_DeptId_DeptName(String deptDetail, String deptName, Pageable pageable);
+    Page<Employee> findByDeptDetailAndUser_Department_DeptName(String deptDetail, String deptName, Pageable pageable);
 
 }

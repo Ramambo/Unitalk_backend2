@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface ProfessorAssignmentRepository extends JpaRepository<ProfessorAssignment, Long> {
 
     // 학과별 지도교수 배정 이력 조회 (페이징 처리)
-    Page<ProfessorAssignment> findByStudentNo_User_DeptId_DeptId(String deptId, Pageable pageable);
+    Page<ProfessorAssignment> findByStudentNo_User_Department_DeptId(String deptId, Pageable pageable);
 
 }

@@ -20,7 +20,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "dept_id", nullable = false)
-    private Department deptId; //부서코드(부서/학과)
+    private Department department; //부서코드(부서/학과)
 
     @Column(name = "user_name", nullable = false)
     private String userName; //사용자 이름
@@ -41,6 +41,6 @@ public class User {
     private Employee employee;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private LoginInfo loginNo;
+    private LoginInfo loginInfo;
 
 }
