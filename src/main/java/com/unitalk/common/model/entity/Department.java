@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "Departments")
 @NoArgsConstructor
-@AllArgsConstructor
 public class Department {
 
     @Id
@@ -19,4 +18,10 @@ public class Department {
     @Column(name = "dept_name", nullable = false) // 부서명
     private String deptName;
 
+    
+    @Builder
+    public Department(String deptId, String deptName) {
+        this.deptId = deptId;
+        this.deptName = deptName;
+    }
 }

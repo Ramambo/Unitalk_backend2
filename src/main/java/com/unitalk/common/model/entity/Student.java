@@ -4,13 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "Students")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,5 +38,17 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "professor_no")  // 교수일련번호
     private Employee professor;
+
+    @Builder
+    public Student(User user, LocalDate regDate, Long grade) {
+        this.user = user;
+        this.regDate = regDate;
+        this.grade = grade;
+    }
+
+    //Setter for 지도교수 배정
+    public void setProfessorId(Employee professorId) {
+        this.professorId = professorId;
+    }
 
 }
