@@ -30,8 +30,16 @@ public class Employee {
     private LocalDate hireDate;
 
     @Column(name = "dept_detail")   // 교직원구분
-    private String deptDetail;
+    private String deptDetail; // 교직원 구분 : PRO 프로페서, COUN 카운슬러, EMP 교직원
 
+    // 교직원 구분이 "교직원" 확인
+    public boolean isStaff() {
+        return "EMP".equals(deptDetail);
+    }
 
+    // 상담사 구분 확인 메서드
+    public boolean isCounselor() {
+        return "COUN".equals(deptDetail);
+    }
 
 }
