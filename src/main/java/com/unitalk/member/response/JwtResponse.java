@@ -1,17 +1,22 @@
 package com.unitalk.member.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class JwtResponse {
+    private String userId;
     private String username;
     private String role;
+    private String userType;
     private String token;
-    private String userType; // 추가된 필드
+
+    public JwtResponse(String userId, String username, String role, String userType, String token) {
+        this.userId = userId;
+        this.username = username;
+        this.role = role;
+        this.userType = userType;
+        this.token = token;
+    }
+
+    // getters and setters
 }

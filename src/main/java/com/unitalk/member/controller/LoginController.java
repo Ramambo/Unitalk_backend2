@@ -54,13 +54,13 @@ public class LoginController {
         // UserDetails를 통해 LoginInfo 정보 가져오기
         CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(loginRequest.getUserId().toString());
         LoginInfo loginInfo = userDetails.getLoginInfo();
-        String usertype = loginInfo.getUserType();
+        String userType = loginInfo.getUserType();
 
         // 로그인 요청에서 제공된 역할을 사용하여 JWT 토큰 생성
-        String token = jwtUtil.createJwt(loginRequest.getUserId().toString(), loginInfo.getRole(), usertype, 3600L);
+        String token = jwtUtil.createJwt(loginRequest.getUserId().toString(), loginInfo.getRole(), userType, 3600L);
         System.out.println("#LoginController / login / token: " + token);
 
         // 역할도 포함된 응답 생성
-        return new JwtResponse(loginRequest.getUserId().toString(), loginInfo.getRole(), usertype, token);
+        return new JwtResponse(loginRequest.getUserId().toString(), loginInfo.getUser().getUserName(), loginInfo.getRole(), userType, token);
     }
 }
