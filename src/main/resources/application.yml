@@ -20,7 +20,7 @@ spring:
     show-sql: true # SQL 쿼리를 출력
     open-in-view: false # 비활성화하여 성능 최적화
     hibernate:
-      ddl-auto: update # 애플리케이션 시작 시 데이터베이스 스키마 설정
+      ddl-auto: create # 애플리케이션 시작 시 데이터베이스 스키마 설정
     properties:
       hibernate:
         format_sql: true # SQL 쿼리 포맷팅
@@ -46,3 +46,10 @@ spring:
   jackson:
     serialization:
       fail-on-empty-beans: false
+# JWT 생성토큰 (jwt.io)
+#{
+#    "project": "Unitalk",
+#    "team": "jointong"
+#}
+  jwt:
+    secret: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0IjoiVW5pdGFsayIsInRlYW0iOiJqb29udG9uZyJ9.i5f_YcazFeyONzxi1dMUPG29w0FFK8QxBHKnqA8XAdQ

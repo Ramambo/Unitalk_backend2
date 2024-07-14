@@ -1,4 +1,4 @@
-package com.unitalk.login.model.entity;
+package com.unitalk.member.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -7,9 +7,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "Login_Info")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,4 +30,14 @@ public class LoginInfo {
     @Column(name = "pwd", nullable = false) // 비밀번호
     private String pwd;
 
+    // 사용자구분 : ROLE_P 프로페서, ROLE_S 스튜던트, ROLE_C 카운셀러, ROLE_E 임플로이
+    @Column(name = "role", nullable = false)
+    private String role;
+
+    @Column(name = "user_type", nullable = false)
+    private String userType;
+
+    public void setRole(String role) {
+        this.role = "ROLE_" + role;
+    }
 }
