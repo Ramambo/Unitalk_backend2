@@ -13,6 +13,7 @@ public class ChatService {
         List<Chat> chats = new ArrayList<>();
         chats.add(new Chat(1L, "안녕하세요!", "user1", LocalDateTime.now()));
         chats.add(new Chat(2L, "반갑습니다!", "user2", LocalDateTime.now()));
+        chats.add(new Chat(32423L, "fake!", "user4232", LocalDateTime.now()));
         return chats;
     }
 
