@@ -1,5 +1,6 @@
 package com.unitalk.member.dto;
 
+import com.unitalk.common.model.entity.User;
 import com.unitalk.member.entity.LoginInfo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -75,6 +76,15 @@ public class CustomUserDetails implements UserDetails {
      */
     public LoginInfo getLoginInfo() {
         return loginInfo;
+    }
+
+    /**
+     * User 객체를 반환합니다.
+     *
+     * @return User 객체
+     */
+    public User getUser() {
+        return loginInfo.getUser();
     }
 
     /**

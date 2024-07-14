@@ -1,5 +1,6 @@
 package com.unitalk.member.controller;
 
+import com.unitalk.common.model.entity.User;
 import com.unitalk.member.dto.CustomUserDetails;
 import com.unitalk.member.dto.LoginRequest;
 import com.unitalk.member.entity.LoginInfo;
@@ -54,6 +55,7 @@ public class LoginController {
         // UserDetails를 통해 LoginInfo 정보 가져오기
         CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(loginRequest.getUserId().toString());
         LoginInfo loginInfo = userDetails.getLoginInfo();
+        User user = loginInfo.getUser();
         String userType = loginInfo.getUserType();
 
         // 로그인 요청에서 제공된 역할을 사용하여 JWT 토큰 생성
@@ -61,6 +63,20 @@ public class LoginController {
         System.out.println("#LoginController / login / token: " + token);
 
         // 역할도 포함된 응답 생성
-        return new JwtResponse(loginRequest.getUserId().toString(), loginInfo.getUser().getUserName(), loginInfo.getRole(), userType, token);
+        Long entityNo = null;
+        if (user.getStudent() != null) {
+            entityNo = user.getStudent().getStudentNo();
+        } else if (user.getEmployee() != null) {
+            entityNo = user.getEmployee().getEmployeeNo();
+        }
+        return new JwtResponse(
+                loginRequest.getUserId().toString(),
+                user.getUserName(), // Ensure the user name is correctly retrieved
+                loginInfo.getRole(),
+                userType,
+                token,
+                entityNo
+        );
     }
+
 }

@@ -5,18 +5,18 @@ import lombok.Data;
 @Data
 public class JwtResponse {
     private String userId;
-    private String username;
+    private String userName; // Added userName field
     private String role;
     private String userType;
     private String token;
+    private Long entityNo;
 
-    public JwtResponse(String userId, String username, String role, String userType, String token) {
+    public JwtResponse(String userId, String userName, String role, String userType, String token, Long entityNo) {
         this.userId = userId;
-        this.username = username;
+        this.userName = userName;
         this.role = role;
         this.userType = userType;
         this.token = token;
+        this.entityNo = entityNo;
     }
-
-    // getters and setters
 }
