@@ -31,7 +31,7 @@ public class LoginInfo {
     private String pwd;
 
     // 사용자구분 : ROLE_P 프로페서, ROLE_S 스튜던트, ROLE_C 카운셀러, ROLE_E 임플로이
-    @Column(name = "role", nullable = false)
+    @Column(name = "role", nullable = false) // 비밀번호
     private String role;
 
     @Column(name = "user_type", nullable = false)

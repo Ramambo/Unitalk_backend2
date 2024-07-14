@@ -61,13 +61,14 @@ public class JWTUtil {
      * @param expiredSeconds 토큰의 만료 시간(초 단위)
      * @return 생성된 JWT 토큰
      */
-    public String createJwt(String username, String role, Long expiredSeconds) {
+    public String createJwt(String username, String role, String userType, Long expiredSeconds) {
         // 초를 밀리초로 변환합니다.
         long expiredMs = expiredSeconds * 1000;
         System.out.println("Util/expiredMs: " + expiredMs);
         return Jwts.builder()
                 .claim("username", username)
                 .claim("role", role)
+                .claim("userType", userType)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 // 만료 시간을 설정합니다.
                 .expiration(new Date(System.currentTimeMillis() + expiredMs))

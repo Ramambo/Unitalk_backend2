@@ -1,14 +1,11 @@
 package com.unitalk.member.dto;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class LoginRequest {
-    private String username;
+    private Long userId;
     private String password;
-    private String role;
-
 }

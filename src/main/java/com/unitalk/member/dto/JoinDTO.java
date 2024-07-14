@@ -1,13 +1,15 @@
 package com.unitalk.member.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Setter
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class JoinDTO {
-    private Long userId; // 추가: 사용자 ID
+    private Long userId;
     private String password;
     private String role;
-    private String userType; // 추가: 사용자 타입
+    private String userType;
 }

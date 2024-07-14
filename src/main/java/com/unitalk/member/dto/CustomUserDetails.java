@@ -18,10 +18,6 @@ public class CustomUserDetails implements UserDetails {
         this.loginInfo = loginInfo;
     }
 
-    public LoginInfo getLoginInfo() {
-        return loginInfo;
-    }
-
     /**
      * 사용자의 권한을 반환합니다.
      *
@@ -51,7 +47,7 @@ public class CustomUserDetails implements UserDetails {
      */
     @Override
     public String getUsername() {
-        return loginInfo.getUser().toString();
+        return loginInfo.getUser().getUserId().toString();
     }
 
     /**
@@ -61,6 +57,24 @@ public class CustomUserDetails implements UserDetails {
      */
     public String getRole() {
         return loginInfo.getRole();
+    }
+
+    /**
+     * 사용자의 타입을 반환합니다.
+     *
+     * @return 타입 문자열
+     */
+    public String getUserType() {
+        return loginInfo.getUserType();
+    }
+
+    /**
+     * LoginInfo 객체를 반환합니다.
+     *
+     * @return LoginInfo 객체
+     */
+    public LoginInfo getLoginInfo() {
+        return loginInfo;
     }
 
     /**

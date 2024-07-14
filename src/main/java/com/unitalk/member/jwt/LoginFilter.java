@@ -1,9 +1,10 @@
 package com.unitalk.member.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unitalk.member.dto.CustomUserDetails;
 import com.unitalk.member.dto.LoginRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,7 +53,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginRequest.getUsername(),
+                            loginRequest.getUserId(),
                             loginRequest.getPassword(),
                             new ArrayList<>()
                     )
@@ -60,6 +61,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         } catch (IOException e) {
             System.out.println("LoginFilter/attemptAuthentication/IOException: " + e.getMessage());
             throw new RuntimeException(e);
+        } catch (AuthenticationException e) {
+            System.out.println("LoginFilter/attemptAuthentication/AuthenticationException: 자격 증명에 실패하였습니다.");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            try {
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write("{\"message\":\"자격 증명에 실패하였습니다.\"}");
+                response.getWriter().flush();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            return null;
         }
     }
 
@@ -76,7 +88,8 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String username = customUserDetails.getUsername();
         String role = customUserDetails.getAuthorities().iterator().next().getAuthority();
-        String token = jwtUtil.createJwt(username, role, 60 * 60 * 10L);
+        String userType = customUserDetails.getUserType(); // CustomUserDetails에 userType을 추가해야 합니다.
+        String token = jwtUtil.createJwt(username, role, userType, 60 * 60 * 10L);
         System.out.println("LoginFilter/로그인 성공 " + username + " " + role + " " + token);
         response.addHeader("Authorization", "Bearer " + token);
     }

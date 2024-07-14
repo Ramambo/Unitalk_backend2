@@ -1,7 +1,6 @@
 package com.unitalk.member.jwt;
 
 import com.unitalk.member.dto.CustomUserDetails;
-import com.unitalk.member.entity.LoginInfo;
 import com.unitalk.member.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

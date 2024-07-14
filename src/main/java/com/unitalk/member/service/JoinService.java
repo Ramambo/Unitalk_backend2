@@ -38,6 +38,9 @@ public class JoinService {
      */
     public void joinProcess(JoinDTO joinDTO) {
         Long userId = joinDTO.getUserId();
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID must not be null");
+        }
         String password = joinDTO.getPassword();
         String role = joinDTO.getRole();
         String userType = joinDTO.getUserType();
@@ -48,7 +51,7 @@ public class JoinService {
             throw new IllegalArgumentException("사용자를 찾을 수 없습니다: " + userId);
         }
 
-        Boolean isExist = loginInfoRepository.existsByUser(user);
+        Boolean isExist = loginInfoRepository.existsByUserUserId(userId);
 
         if (isExist) {
             return;
