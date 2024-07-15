@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProgramRequestDto {
+    private Long programNo;
     private Long counselorNo; // 상담사
     private String programName; // 집단상담명
     private String programContent; // 집단상담 내용
