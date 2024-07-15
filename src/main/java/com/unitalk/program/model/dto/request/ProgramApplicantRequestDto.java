@@ -14,6 +14,7 @@ import java.time.LocalDate;
 public class ProgramApplicantRequestDto {
     private Long programNo; // 집단상담 번호
     private Long studentNo; // 학생 번호
+    private Long studentId; // 학생 ID
     @JsonFormat(pattern = "yyyy-MM-dd") // 집단상담 신청일
     private LocalDate applicantDate;
     private Long status; // 상태
