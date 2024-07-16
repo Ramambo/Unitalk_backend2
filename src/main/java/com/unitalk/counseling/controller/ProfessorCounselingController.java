@@ -1,5 +1,6 @@
 package com.unitalk.counseling.controller;
 
+import com.unitalk.common.repository.EmployeeRepository;
 import com.unitalk.counseling.model.dto.request.CounselingRequestDto;
 import com.unitalk.counseling.model.dto.response.CounselingResponseDto;
 import com.unitalk.counseling.model.dto.response.EmployeeResponseDto;
@@ -36,6 +37,13 @@ public class ProfessorCounselingController {
         log.info("getCounselorAll 교수 전체조회");
         final List<EmployeeResponseDto> response = professorCounselingService.getCounselorFindAll();
         return ResponseEntity.ok(response);
+    }
+
+    //상담사 타임별로 교직원 조회
+    @GetMapping("/byCounselType")
+    public ResponseEntity<List<EmployeeResponseDto>> getProfessorByCounselType(@RequestParam String deptDetail){
+        List<EmployeeResponseDto> professors = professorCounselingService.getProfessorsByCounselType(deptDetail);
+        return ResponseEntity.ok(professors);
     }
 
 }

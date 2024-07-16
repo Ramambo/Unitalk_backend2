@@ -26,4 +26,12 @@ public class ProfessorCounselingService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<EmployeeResponseDto> getProfessorsByCounselType(String deptDetail){
+        List<Employee> list = employeeRepository.findByDeptDetail(deptDetail);
+        return list.stream()
+                .map(employee -> modelMapper.map(employee, EmployeeResponseDto.class))
+                .collect(Collectors.toList());
+    }
+
 }
