@@ -3,7 +3,8 @@ server:
 
 spring:
   application:
-    name: unitalk
+    name: Unitalk
+    version : 0.1
 
   # 데이터베이스 설정
   datasource:
