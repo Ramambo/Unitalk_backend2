@@ -12,7 +12,9 @@ import com.unitalk.program.repository.ProgramRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,14 +40,14 @@ public class ProgramService {
     }
 
     // 집단상담 필터 및 검색
-    public Page<ProgramResponseDto> getProgramsByFilters(Long counselorNo, String programName, String programContent,
-                                                            LocalDate recruitStart, LocalDate recruitEnd,
-                                                            LocalDate operationStart, LocalDate operationEnd,
-                                                            Long status, Long viewCnt, Pageable pageable) {
+    public Page<ProgramResponseDto> getProgramsByFilters(Long counselorNo, String keyword, String programName, String programContent,
+                                                         LocalDate recruitStart, LocalDate recruitEnd,
+                                                         LocalDate operationStart, LocalDate operationEnd,
+                                                         Long status, Long viewCnt, Pageable pageable) {
 
-        Page<Program> programs = programRepository.findByFilters(counselorNo, programName, programContent,
-                                                                    recruitStart, recruitEnd,
-                                                                    operationStart, operationEnd, status, viewCnt, pageable);
+        Page<Program> programs = programRepository.findByFilters(counselorNo, keyword, programName, programContent,
+                recruitStart, recruitEnd,
+                operationStart, operationEnd, status, viewCnt, pageable);
         return programs.map(this::ProgramDto);
     }
 
@@ -63,15 +65,7 @@ public class ProgramService {
 
     // 집단상담 작성
     @Transactional
-    public ProgramResponseDto createProgram(ProgramRequestDto requestDto, Long employeeNo) {
-        // 프로그램 입력 요청자의 정보 조회 (교직원만 가능)
-        Employee employee = employeeRepository.findById(employeeNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + employeeNo));
-
-        // 교직원 검증
-        if (!employee.isStaff()) {
-            throw new IllegalArgumentException("교직원만 프로그램을 입력할 수 있습니다.");
-        }
+    public ProgramResponseDto createProgram(ProgramRequestDto requestDto) {
 
         // 상담사 정보 조회
         Employee counselor = employeeRepository.findById(requestDto.getCounselorNo())
@@ -92,7 +86,7 @@ public class ProgramService {
                 .programSession(requestDto.getProgramSession())
                 .recruitNum(requestDto.getRecruitNum())
                 .status(requestDto.getStatus())
-                .viewCnt(requestDto.getViewCnt())
+                .viewCnt(requestDto.getViewCnt() == null ? 0L : requestDto.getViewCnt())
                 .build();
 
         program = programRepository.save(program);
@@ -101,18 +95,9 @@ public class ProgramService {
 
     // 집단상담 수정
     @Transactional
-    public ProgramResponseDto updateProgram(Long programNo, ProgramRequestDto requestDto, Long employeeNo) {
+    public ProgramResponseDto updateProgram(Long programNo, ProgramRequestDto requestDto) {
         Program program = programRepository.findById(programNo)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시글이 없습니다." + programNo));
-
-        // 프로그램 수정 요청자의 정보 조회 (교직원만 가능)
-        Employee employee = employeeRepository.findById(employeeNo)
-                .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + employeeNo));
-
-        // 교직원 검증
-        if (!employee.isStaff()) {
-            throw new IllegalArgumentException("교직원만 프로그램을 수정할 수 있습니다.");
-        }
 
         // 상담사 정보 조회
         Employee counselor = employeeRepository.findById(requestDto.getCounselorNo())
@@ -123,12 +108,14 @@ public class ProgramService {
             throw new IllegalArgumentException("상담사만 상담사로 지정할 수 있습니다.");
         }
 
+        // 프로그램 정보 업데이트
         program.update(requestDto.getProgramName(), requestDto.getProgramContent(),
                 requestDto.getRecruitStart(), requestDto.getRecruitEnd(),
                 requestDto.getOperationStart(), requestDto.getOperationEnd(),
                 requestDto.getProgramSession(), requestDto.getRecruitNum(),
                 requestDto.getStatus(), requestDto.getViewCnt());
         program.setCounselor(counselor);
+
         return programRepository.save(program).toDto();
     }
 
@@ -179,6 +166,27 @@ public class ProgramService {
                 .thumbnailFile(thumbnailFileDto)
                 .files(fileDtos)
                 .build();
+    }
+
+    // 기존 게시글 상태 초기화
+    @Transactional
+    public void initializeProgramStatuses() {
+        LocalDate now = LocalDate.now();
+        programRepository.updateStatus(now);
+    }
+
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정에 실행
+    @Transactional
+    public void updateProgramStatuses() {
+        LocalDate now = LocalDate.now();
+        programRepository.updateStatus(now);
+    }
+
+    // 메인페이지 TOP12
+    public List<ProgramResponseDto> getTop12Programs() {
+        Pageable pageable = PageRequest.of(0, 12);
+        Page<Program> programsPage = programRepository.findTop12ByStatusOrderByViewCntDesc(pageable);
+        return programsPage.getContent().stream().map(this::ProgramDto).toList();
     }
 
 }

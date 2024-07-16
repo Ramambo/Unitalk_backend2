@@ -1,5 +1,7 @@
 package com.unitalk.program.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.unitalk.common.model.entity.Employee;
 import com.unitalk.program.model.dto.response.ProgramResponseDto;
 import jakarta.persistence.*;
@@ -18,6 +20,7 @@ import java.util.List;
 @Table(name = "Program")
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "programNo")
 public class Program {
     @Id
     @Column(name = "program_no")
@@ -56,14 +59,14 @@ public class Program {
     @Column(name = "status", nullable = false) // 상태
     private Long status; // 1: 신청가능, 2: 신청불가
 
-    @Column(name = "view_cnt")
-    @ColumnDefault("0") // 기본값 0
-    private Long viewCnt; // 조회수
+    @ColumnDefault("0")
+    @Column(nullable = false)
+    private Long viewCnt = 0L;
 
     @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ProgramFile> programFiles; // 집단상담 파일(이미지)-삭제용
 
-    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ProgramApplicant> applicants; // 집단상담 신청-삭제용
 
     // 엔티티 필드 업데이트
@@ -79,9 +82,13 @@ public class Program {
         this.programSession = programSession;
         this.recruitNum = recruitNum;
         this.status = status;
-        this.viewCnt = viewCnt;
+        this.viewCnt = viewCnt == null ? 0L : viewCnt;
     }
 
+    // 모집기간 완료시 신청내용이 완료가 되게
+    public boolean isExpired() {
+        return LocalDate.now().isAfter(operationEnd);
+    }
 
     public void setCounselor(Employee counselor) {
         this.counselor = counselor;
