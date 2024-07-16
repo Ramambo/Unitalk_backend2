@@ -2,8 +2,6 @@ package com.unitalk.program.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.unitalk.common.model.entity.Employee;
-import com.unitalk.common.repository.EmployeeRepository;
 import com.unitalk.program.model.dto.request.ProgramRequestDto;
 import com.unitalk.program.model.dto.response.ProgramResponseDto;
 import com.unitalk.program.service.ProgramFileService;
@@ -26,23 +24,15 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/program")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ProgramController {
 
     private final ProgramService programService;
     private final ProgramFileService programFileService;
-    private final EmployeeRepository employeeRepository;
-
-    // 상담사 목록 조회
-    @GetMapping("/counselors")
-    public ResponseEntity<List<Employee>> getCounselors() {
-        List<Employee> counselors = employeeRepository.findByDeptDetail("COUN");
-        return new ResponseEntity<>(counselors, HttpStatus.OK);
-    }
 
     // 집단상담 목록 조회
-    @GetMapping("/list")
+    @GetMapping("/programs")
     public ResponseEntity<Page<ProgramResponseDto>> getAllPrograms(@RequestParam(defaultValue = "0") int page,
                                                                    @RequestParam(defaultValue = "16") int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -51,10 +41,9 @@ public class ProgramController {
     }
 
     // 집단상담 필터 및 검색
-    @GetMapping("/list/search")
+    @GetMapping("/programs/search")
     public ResponseEntity<Page<ProgramResponseDto>> getProgramsByFilters(
             @RequestParam(required = false) Long counselorNo,
-            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String programName,
             @RequestParam(required = false) String programContent,
             @RequestParam(required = false) LocalDate recruitStart,
@@ -76,67 +65,62 @@ public class ProgramController {
         Pageable pageable = PageRequest.of(page, size, sorting);
 
         Page<ProgramResponseDto> programs = programService.getProgramsByFilters(
-                counselorNo, keyword, programName, programContent, recruitStart, recruitEnd,
+                counselorNo, programName, programContent, recruitStart, recruitEnd,
                 operationStart, operationEnd, status, viewCnt, pageable);
         return new ResponseEntity<>(programs, HttpStatus.OK);
     }
 
     // 집단상담 조회
-    @GetMapping("/{programNo}")
+    @GetMapping("/program/{programNo}")
     public ResponseEntity<ProgramResponseDto> getProgramById(@PathVariable Long programNo) {
         ProgramResponseDto program = programService.getProgramById(programNo);
         return new ResponseEntity<>(program, HttpStatus.OK);
     }
 
     // 집단상담 작성
-    @PostMapping
+    /*
+        @RequestHeader("employeeNo") Long employeeNo
+        요청 보낸 헤더에서 직원번호 추출하여 비교, 직원만 작성 가능
+    */
+    @PostMapping("/program")
     public ResponseEntity<ProgramResponseDto> createProgram(
             @Valid @ModelAttribute("program") String programJson,
-            @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
+            @RequestPart("files") List<MultipartFile> files,
+            @RequestHeader("employeeNo") Long employeeNo) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         ProgramRequestDto requestDto = objectMapper.readValue(programJson, ProgramRequestDto.class);
 
-        ProgramResponseDto program = programService.createProgram(requestDto);
-        if (files != null && !files.isEmpty()) {
-            programFileService.saveFiles(files, program.getProgramNo());
-        }
+        ProgramResponseDto program = programService.createProgram(requestDto, employeeNo);
+        programFileService.saveFiles(files, program.getProgramNo());
 
         return new ResponseEntity<>(program, HttpStatus.CREATED);
     }
 
     // 집단상담 수정
-    @PutMapping("/{programNo}")
+    @PutMapping("/program/{programNo}")
     public ResponseEntity<ProgramResponseDto> updateProgram(
             @PathVariable Long programNo,
             @Valid @ModelAttribute("program") String programJson,
-            @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
+            @RequestPart("files") List<MultipartFile> files,
+            @RequestHeader("employeeNo") Long employeeNo) throws IOException {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         ProgramRequestDto requestDto = objectMapper.readValue(programJson, ProgramRequestDto.class);
 
-        ProgramResponseDto program = programService.updateProgram(programNo, requestDto);
-        if (files != null && !files.isEmpty()) {
-            programFileService.saveFiles(files, program.getProgramNo());
-        }
+        ProgramResponseDto program = programService.updateProgram(programNo, requestDto, employeeNo);
+        programFileService.saveFiles(files, program.getProgramNo());
 
         return new ResponseEntity<>(program, HttpStatus.OK);
     }
 
     // 집단상담 삭제
-    @DeleteMapping("/{programNo}")
+    @DeleteMapping("/program/{programNo}")
     public ResponseEntity<Void> deleteProgram(@PathVariable Long programNo) {
         programService.deleteProgram(programNo);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    // 메인페이지 TOP12
-    @GetMapping("/main/top12")
-    public ResponseEntity<List<ProgramResponseDto>> getTop12Programs() {
-        List<ProgramResponseDto> programs = programService.getTop12Programs();
-        return new ResponseEntity<>(programs, HttpStatus.OK);
     }
 
 }

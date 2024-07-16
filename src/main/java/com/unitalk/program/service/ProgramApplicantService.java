@@ -14,7 +14,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,85 +26,80 @@ public class ProgramApplicantService {
     private final ProgramApplicantRepository programApplicantRepository;
     private final ProgramRepository programRepository;
     private final StudentRepository studentRepository;
+    private final EmployeeRepository employeeRepository;
 
     // 학생의 집단상담 신청 조회
     @Transactional(readOnly = true)
-    public Page<ProgramApplicantResponseDto> getStudentApplications(Long studentId, Pageable pageable) {
-        return programApplicantRepository.findByStudentUserUserIdOrderByApplicantDateDesc(studentId, pageable)
+    public Page<ProgramApplicantResponseDto> getStudentApplications(Long studentNo, Pageable pageable) {
+        Student student = studentRepository.findById(studentNo)
+                .orElseThrow(() -> new IllegalArgumentException("해당 학생 정보가 없습니다." + studentNo));
+        return programApplicantRepository.findByStudentOrderByApplicantDateDesc(student, pageable)
                 .map(this::ProgramDto);
     }
 
     // 학생의 집단상담 신청 작성
     @Transactional
-    public ProgramApplicantResponseDto applyForProgram(ProgramApplicantRequestDto requestDto) {
-        Long studentNo = requestDto.getStudentNo();
-        Long programNo = requestDto.getProgramNo();
-        // 프로그램 존재 여부 확인
-        Program program = programRepository.findById(programNo)
-                .orElseThrow(() -> new IllegalArgumentException("해당 프로그램이 없습니다."));
-        // 프로그램 상태 확인 (1: 신청가능)
-        if (!program.getStatus().equals(1L)) {
-            throw new IllegalStateException("현재 프로그램은 신청 불가 상태입니다.");
-        }
-        // 현재 날짜가 신청 기간 내인지 확인
-        LocalDate now = LocalDate.now();
-        if (now.isBefore(program.getRecruitStart()) || now.isAfter(program.getRecruitEnd())) {
-            throw new IllegalStateException("신청 기간이 아닙니다.");
-        }
-        // 학생 존재 여부 확인
+    public ProgramApplicantResponseDto createApplication(ProgramApplicantRequestDto requestDto) {
+        Program program = programRepository.findById(requestDto.getProgramNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다." + requestDto.getProgramNo()));
         Student student = studentRepository.findById(requestDto.getStudentNo())
-                .orElseThrow(() -> new IllegalArgumentException("해당 학생이 없습니다."));
-        // 이미 신청한 내역이 있는지 확인
-        ProgramApplicant existingApplication = programApplicantRepository.findByProgramNoAndStudentStudentNo(programNo, studentNo);
-        if (existingApplication != null && existingApplication.getStatus().equals(1L)) {
-            throw new IllegalStateException("이미 신청한 프로그램입니다.");
-        }
+                .orElseThrow(() -> new IllegalArgumentException("해당 학생 정보가 없습니다." + requestDto.getStudentNo()));
+
         ProgramApplicant application = ProgramApplicant.builder()
                 .program(program)
                 .student(student)
-                .applicantDate(now)
-                .status(1L)
+                .applicantDate(requestDto.getApplicantDate())
+                .status(requestDto.getStatus())
                 .build();
-        // 신청 저장
+
         ProgramApplicant savedApplication = programApplicantRepository.save(application);
-        return new ProgramApplicantResponseDto(savedApplication);
+        return ProgramDto(savedApplication);
     }
 
     // 전교생 집단상담 신청 목록 조회(교직원, 상담사)
-    @Transactional(readOnly = true)
     public Page<ProgramApplicantResponseDto> getAllApplicants(Pageable pageable) {
         Page<ProgramApplicant> applicants = programApplicantRepository.findAllByOrderByApplicantDateDesc(pageable);
         return applicants.map(this::ProgramDto);
     }
 
     // 집단상담 필터 및 검색
-    @Transactional(readOnly = true)
     public Page<ProgramApplicantResponseDto> getProgramApplicantByFilters(Long programNo, Long studentNo,
                                                                           LocalDate applicantDate, Long status, Pageable pageable) {
         Page<ProgramApplicant> applicants = programApplicantRepository.findByFilters(programNo, studentNo, applicantDate, status, pageable);
         return applicants.map(this::ProgramDto);
     }
 
-    // 특정 프로그램의 신청 목록 조회
-    @Transactional(readOnly = true)
-    public Page<ProgramApplicantResponseDto> getApplicantsByProgram(Long programNo, Pageable pageable) {
-        Page<ProgramApplicant> applicants = programApplicantRepository.findByProgramNo(programNo, pageable);
-        return applicants.map(this::ProgramDto);
-    }
-
-    // 특정 프로그램 신청인 조회 필터 및 검색
-    @Transactional(readOnly = true)
-    public Page<ProgramApplicantResponseDto> getApplicantsByProgramWithFilters(Long programNo, String studentName,
-                                                                               LocalDate applicantDate, Long status,
-                                                                               Pageable pageable) {
-        Page<ProgramApplicant> applicants = programApplicantRepository.findByProgramNoWithFilters(
-                programNo, studentName, applicantDate, status, pageable);
-        return applicants.map(this::ProgramDto);
-    }
-
-    // 집단상담 신청 수정(삭제)
+    // 특정 학생의 집단상담 신청 작성(교직원, 상담사)
     @Transactional
-    public ProgramApplicantResponseDto cancelApplication(Long applicantNo) {
+    public ProgramApplicantResponseDto createApplicationForStudent(ProgramApplicantRequestDto requestDto, Long employeeNo) {
+        // 학생 존재 여부 확인
+        Student student = studentRepository.findById(requestDto.getStudentNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 학생 정보가 없습니다." + requestDto.getStudentNo()));
+        // 프로그램 존재 여부 확인
+        Program program = programRepository.findById(requestDto.getProgramNo())
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다." + requestDto.getProgramNo()));
+        // 교직원 정보 검증
+        Employee employee = employeeRepository.findById(employeeNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + employeeNo));
+
+        // 신청 객체 생성
+        ProgramApplicant application = new ProgramApplicant();
+        application.setProgram(program);
+        application.setStudent(student);
+        application.setStatus(requestDto.getStatus());
+        application.setApplicantDate(requestDto.getApplicantDate());
+
+        // 신청 저장
+        ProgramApplicant savedApplication = programApplicantRepository.save(application);
+        return ProgramDto(savedApplication);
+    }
+
+    // 집단상담 신청 수정
+    @Transactional
+    public ProgramApplicantResponseDto cancelApplication(Long applicantNo, Long employeeNo) {
+        // 교직원 정보 검증
+        Employee employee = employeeRepository.findById(employeeNo)
+                .orElseThrow(() -> new EntityNotFoundException("해당 교직원 정보가 없습니다." + employeeNo));
         // 신청내역 검증
         ProgramApplicant application = programApplicantRepository.findById(applicantNo)
                 .orElseThrow(() -> new IllegalArgumentException("해당 신청내역이 없습니다." + applicantNo));
@@ -120,19 +114,10 @@ public class ProgramApplicantService {
         return ProgramApplicantResponseDto.builder()
                 .applicantNo(programApplicant.getApplicantNo())
                 .program(programApplicant.getProgram())
-                .userId(programApplicant.getStudent().getUser().getUserId())
-                .userName(programApplicant.getStudent().getUser().getUserName())
+                .student(programApplicant.getStudent())
                 .applicantDate(programApplicant.getApplicantDate())
                 .status(programApplicant.getStatus())
                 .build();
-    }
-
-    // 집단상담 운영날짜 지난 후 상태 완료로 변경
-    @Scheduled(cron = "0 0 0 * * ?")
-    @Transactional
-    public void updateProgramApplicantStatuses() {
-        LocalDate now = LocalDate.now();
-        programApplicantRepository.updateStatus(now);
     }
 
 }

@@ -16,85 +16,74 @@ import java.time.LocalDate;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/applicant")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ProgramApplicantController {
 
     private final ProgramApplicantService programApplicantService;
 
     // 학생의 집단상담 신청 조회
-    @GetMapping("/{studentId}")
+    @GetMapping("/applicant/{studentNo}")
     public ResponseEntity<Page<ProgramApplicantResponseDto>> getStudentApplications(
-            @PathVariable Long studentId,
+            @PathVariable Long studentNo,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ProgramApplicantResponseDto> applications = programApplicantService.getStudentApplications(studentId, pageable);
+        Page<ProgramApplicantResponseDto> applications = programApplicantService.getStudentApplications(studentNo, pageable);
         return ResponseEntity.ok(applications);
     }
 
-    // 집단상담 신청
-    @PostMapping("/student")
-    public ResponseEntity<ProgramApplicantResponseDto> createProgram(@RequestBody ProgramApplicantRequestDto requestDto) {
-        ProgramApplicantResponseDto responseDto = programApplicantService.applyForProgram(requestDto);
-        return ResponseEntity.ok(responseDto);
+    // 학생의 집단상담 신청 작성
+    @PostMapping("/applicant-studnt")
+    public ResponseEntity<ProgramApplicantResponseDto> createApplication(
+            @RequestBody ProgramApplicantRequestDto requestDto) {
+        ProgramApplicantResponseDto responseDto = programApplicantService.createApplication(requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     // 전교생 집단상담 신청 목록 조회(교직원, 상담사)
-    @GetMapping("/list")
+    @GetMapping("/applicants")
     public ResponseEntity<Page<ProgramApplicantResponseDto>> getAllApplicants(@RequestParam(defaultValue = "0") int page,
-                                                                              @RequestParam(defaultValue = "10") int size) {
+                                                                              @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProgramApplicantResponseDto> applicants = programApplicantService.getAllApplicants(pageable);
         return  new ResponseEntity<>(applicants, HttpStatus.OK);
     }
 
-    // 집단상담 신청 필터 및 검색
-    @GetMapping("/list/search")
+    // 집단상담 필터 및 검색
+    @GetMapping("/applicants/search")
     public ResponseEntity<Page<ProgramApplicantResponseDto>> getProgramApplicantsByFilters(
             @RequestParam(required = false) Long programNo,
             @RequestParam(required = false) Long studentNo,
             @RequestParam(required = false) LocalDate applicantDate,
             @RequestParam(required = false) Long status,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProgramApplicantResponseDto> applicants = programApplicantService.getProgramApplicantByFilters(
-                programNo, studentNo, applicantDate, status, pageable);
+                        programNo, studentNo, applicantDate, status, pageable);
         return new ResponseEntity<>(applicants, HttpStatus.OK);
     }
 
-    // 특정 프로그램의 신청 목록 조회
-    @GetMapping("/list/{programNo}")
-    public ResponseEntity<Page<ProgramApplicantResponseDto>> getApplicantsByProgram(
-            @PathVariable Long programNo,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ProgramApplicantResponseDto> applicants = programApplicantService.getApplicantsByProgram(programNo, pageable);
-        return ResponseEntity.ok(applicants);
-    }
-
-    // 특정 프로그램 신청인 조회 필터 및 검색
-    @GetMapping("/list/{programNo}/search")
-    public ResponseEntity<Page<ProgramApplicantResponseDto>> getApplicantsByProgramWithFilters(
-            @PathVariable Long programNo,
-            @RequestParam(required = false) String studentName,
-            @RequestParam(required = false) LocalDate applicantDate,
-            @RequestParam(required = false) Long status,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<ProgramApplicantResponseDto> applicants = programApplicantService.getApplicantsByProgramWithFilters(
-                programNo, studentName, applicantDate, status, pageable);
-        return ResponseEntity.ok(applicants);
+    // 특정 학생의 집단상담 신청 작성(교직원, 상담사)
+    /*
+        @RequestHeader("employeeNo") Long employeeNo
+        요청 보낸 헤더에서 직원번호 추출하여 비교, 직원만 작성 가능
+    */
+    @PostMapping("/applicant-employee")
+    public ResponseEntity<ProgramApplicantResponseDto> createApplicationForStudent(
+            @RequestBody ProgramApplicantRequestDto requestDto,
+            @RequestHeader("employeeNo") Long employeeNo) {
+        ProgramApplicantResponseDto responseDto = programApplicantService.createApplicationForStudent(requestDto, employeeNo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     // 집단상담 신청 수정(삭제)
-    @PatchMapping("/{applicantNo}")
+    @PatchMapping("/applicant/{applicantNo}")
     public ResponseEntity<ProgramApplicantResponseDto> cancelApplication(
-            @PathVariable Long applicantNo) {
-        ProgramApplicantResponseDto responseDto = programApplicantService.cancelApplication(applicantNo);
+            @PathVariable Long applicantNo,
+            @RequestHeader("employeeNo") Long employeeNo) {
+        ProgramApplicantResponseDto responseDto = programApplicantService.cancelApplication(applicantNo, employeeNo);
         return ResponseEntity.ok(responseDto);
     }
 

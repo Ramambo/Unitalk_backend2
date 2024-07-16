@@ -1,7 +1,5 @@
 package com.unitalk.program.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.unitalk.common.model.entity.Student;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +7,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -18,7 +15,6 @@ import java.util.Set;
 @Table(name = "Program_Applicants")
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "applicantNo")
 public class ProgramApplicant {
     @Id
     @Column(name = "applicant_no")
@@ -38,7 +34,7 @@ public class ProgramApplicant {
     private LocalDate applicantDate;
 
     @Column(name = "status", nullable = false) // 상태
-    @ColumnDefault("1") // 1: 신청, 2: 취소, 3: 완료
+    @ColumnDefault("1") // 1: 신청, 2: 취소
     private Long status;
 
 }
