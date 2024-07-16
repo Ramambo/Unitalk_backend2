@@ -47,3 +47,10 @@ spring:
   jackson:
     serialization:
       fail-on-empty-beans: false
+# JWT 생성토큰 (jwt.io)
+#{
+#    "project": "Unitalk",
+#    "team": "jointong"
+#}
+  jwt:
+    secret: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0IjoiVW5pdGFsayIsInRlYW0iOiJqb29udG9uZyJ9.i5f_YcazFeyONzxi1dMUPG29w0FFK8QxBHKnqA8XAdQ

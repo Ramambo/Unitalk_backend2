@@ -2,14 +2,16 @@ package com.unitalk.common.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.unitalk.login.model.entity.LoginInfo;
+import com.unitalk.member.entity.LoginInfo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "Users")
 @NoArgsConstructor
 @AllArgsConstructor
