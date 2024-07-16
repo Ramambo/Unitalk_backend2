@@ -74,7 +74,7 @@ public class SecurityConfig {
         http.formLogin((auth) -> auth.disable()); // 폼 로그인 비활성화
         http.httpBasic((auth) -> auth.disable()); // HTTP 기본 인증 비활성화
         http.authorizeHttpRequests((auth) -> auth
-//                .requestMatchers("/api/login", "/api/join", "/api/logout").permitAll() // 특정 경로 접근 허용
+                .requestMatchers("**").permitAll() // 특정 경로 접근 허용
 //                .requestMatchers("/admin").hasRole("ADMIN") // /admin 경로는 ADMIN 역할만 접근 허용
                 .anyRequest().authenticated()); // 그 외 모든 요청은 인증 필요
         http.addFilterBefore(new JWTFilter(jwtUtil, customUserDetailsService), UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
