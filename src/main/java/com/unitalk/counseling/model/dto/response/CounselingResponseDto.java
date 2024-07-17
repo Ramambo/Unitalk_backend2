@@ -1,8 +1,9 @@
 package com.unitalk.counseling.model.dto.response;
 
-import com.unitalk.common.model.dto.response.DepartmentDto;
-import com.unitalk.common.model.dto.response.EmployeeDto;
-import com.unitalk.common.model.dto.response.StudentDto;
+import com.unitalk.common.model.entity.Department;
+import com.unitalk.common.model.entity.Employee;
+import com.unitalk.common.model.entity.Student;
+import com.unitalk.counseling.model.entity.CounselorSchedule;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -16,13 +17,13 @@ import java.time.LocalDateTime;
 public class CounselingResponseDto {
 
     private Long reqNo;
-    private StudentDto student;
-    private EmployeeDto counselor;
+    private Student student;
+    private Employee counselor;
     private LocalDate counselDate;
-    private CounselorScheduleResponseDto schedule;
+    private CounselorSchedule schedule;
     private LocalDateTime applicationDate;
     private Long counselMode;
-    private DepartmentDto department;
+    private Department department;
     private String applicationContent;
     private Long status;
     private String counselContent;

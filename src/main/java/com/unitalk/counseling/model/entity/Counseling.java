@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reqNo")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "reqNo")
 public class Counseling {
 
     @Id
@@ -69,8 +69,8 @@ public class Counseling {
     @Column(name = "record_time")   // 상담기록을 작성한 시각
     private LocalDateTime recordTime;
 
-//    @ManyToOne
-//    @JoinColumn(name = "previous_req_no")   // 이전상담번호
-//    private Counseling previousReqCounseling;
+    @ManyToOne
+    @JoinColumn(name = "previous_req_no")   // 이전상담번호
+    private Counseling previousReqCounseling;
 
 }
